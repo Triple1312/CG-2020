@@ -1,0 +1,42 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG/easy_image.h
+stdint.h
+-
+vector
+-
+iostream
+-
+
+/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG/engine.cc
+easy_image.h
+/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG/easy_image.h
+ini_configuration.h
+/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG/ini_configuration.h
+fstream
+-
+iostream
+-
+stdexcept
+-
+string
+-
+
+/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG/ini_configuration.h
+iostream
+-
+map
+-
+stdexcept
+-
+string
+-
+vector
+-
+

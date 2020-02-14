@@ -1,0 +1,4 @@
+/usr/local/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/usr/bin/make -G "CodeBlocks - Unix Makefiles" "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG"
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG/cmake-build-debug
