@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG/easy_image.h
+/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/easy_image.h
 stdint.h
 -
 vector
@@ -14,21 +14,7 @@ vector
 iostream
 -
 
-/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG/engine.cc
-easy_image.h
-/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG/easy_image.h
-ini_configuration.h
-/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG/ini_configuration.h
-fstream
--
-iostream
--
-stdexcept
--
-string
--
-
-/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG/ini_configuration.h
+/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/ini_configuration.h
 iostream
 -
 map
@@ -39,4 +25,34 @@ string
 -
 vector
 -
+
+/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/l_parser.h
+map
+-
+string
+-
+set
+-
+exception
+-
+
+/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/lines.cc
+cmath
+-
+lines.h
+/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/lines.h
+
+/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/lines.h
+iostream
+-
+string
+-
+memory
+-
+l_parser.h
+/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/l_parser.h
+ini_configuration.h
+/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/ini_configuration.h
+easy_image.h
+/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/easy_image.h
 

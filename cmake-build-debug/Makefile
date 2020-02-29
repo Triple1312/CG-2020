@@ -48,10 +48,10 @@ RM = /opt/cmake/cmake-3.16.0-rc3-Linux-x86_64/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG"
+CMAKE_SOURCE_DIR = "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG/cmake-build-debug"
+CMAKE_BINARY_DIR = "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/cmake-build-debug"
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -126,9 +126,9 @@ list_install_components/fast: list_install_components
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG/cmake-build-debug/CMakeFiles" "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG/cmake-build-debug/CMakeFiles/progress.marks"
+	$(CMAKE_COMMAND) -E cmake_progress_start "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/cmake-build-debug/CMakeFiles" "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/cmake-build-debug/CMakeFiles/progress.marks"
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG/cmake-build-debug/CMakeFiles" 0
+	$(CMAKE_COMMAND) -E cmake_progress_start "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/cmake-build-debug/CMakeFiles" 0
 .PHONY : all
 
 # The main clean target
@@ -169,32 +169,32 @@ engine/fast:
 	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/build
 .PHONY : engine/fast
 
-L2DSystem.o: L2DSystem.cpp.o
+L2DSystem.o: L2DSystem.cc.o
 
 .PHONY : L2DSystem.o
 
 # target to build an object file
-L2DSystem.cpp.o:
-	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/L2DSystem.cpp.o
-.PHONY : L2DSystem.cpp.o
+L2DSystem.cc.o:
+	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/L2DSystem.cc.o
+.PHONY : L2DSystem.cc.o
 
-L2DSystem.i: L2DSystem.cpp.i
+L2DSystem.i: L2DSystem.cc.i
 
 .PHONY : L2DSystem.i
 
 # target to preprocess a source file
-L2DSystem.cpp.i:
-	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/L2DSystem.cpp.i
-.PHONY : L2DSystem.cpp.i
+L2DSystem.cc.i:
+	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/L2DSystem.cc.i
+.PHONY : L2DSystem.cc.i
 
-L2DSystem.s: L2DSystem.cpp.s
+L2DSystem.s: L2DSystem.cc.s
 
 .PHONY : L2DSystem.s
 
 # target to generate assembly for a file
-L2DSystem.cpp.s:
-	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/L2DSystem.cpp.s
-.PHONY : L2DSystem.cpp.s
+L2DSystem.cc.s:
+	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/L2DSystem.cc.s
+.PHONY : L2DSystem.cc.s
 
 easy_image.o: easy_image.cc.o
 
@@ -277,6 +277,87 @@ ini_configuration.cc.s:
 	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/ini_configuration.cc.s
 .PHONY : ini_configuration.cc.s
 
+l_parser.o: l_parser.cc.o
+
+.PHONY : l_parser.o
+
+# target to build an object file
+l_parser.cc.o:
+	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/l_parser.cc.o
+.PHONY : l_parser.cc.o
+
+l_parser.i: l_parser.cc.i
+
+.PHONY : l_parser.i
+
+# target to preprocess a source file
+l_parser.cc.i:
+	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/l_parser.cc.i
+.PHONY : l_parser.cc.i
+
+l_parser.s: l_parser.cc.s
+
+.PHONY : l_parser.s
+
+# target to generate assembly for a file
+l_parser.cc.s:
+	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/l_parser.cc.s
+.PHONY : l_parser.cc.s
+
+l_system.o: l_system.cc.o
+
+.PHONY : l_system.o
+
+# target to build an object file
+l_system.cc.o:
+	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/l_system.cc.o
+.PHONY : l_system.cc.o
+
+l_system.i: l_system.cc.i
+
+.PHONY : l_system.i
+
+# target to preprocess a source file
+l_system.cc.i:
+	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/l_system.cc.i
+.PHONY : l_system.cc.i
+
+l_system.s: l_system.cc.s
+
+.PHONY : l_system.s
+
+# target to generate assembly for a file
+l_system.cc.s:
+	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/l_system.cc.s
+.PHONY : l_system.cc.s
+
+lines.o: lines.cc.o
+
+.PHONY : lines.o
+
+# target to build an object file
+lines.cc.o:
+	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/lines.cc.o
+.PHONY : lines.cc.o
+
+lines.i: lines.cc.i
+
+.PHONY : lines.i
+
+# target to preprocess a source file
+lines.cc.i:
+	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/lines.cc.i
+.PHONY : lines.cc.i
+
+lines.s: lines.cc.s
+
+.PHONY : lines.s
+
+# target to generate assembly for a file
+lines.cc.s:
+	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/lines.cc.s
+.PHONY : lines.cc.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -302,6 +383,15 @@ help:
 	@echo "... ini_configuration.o"
 	@echo "... ini_configuration.i"
 	@echo "... ini_configuration.s"
+	@echo "... l_parser.o"
+	@echo "... l_parser.i"
+	@echo "... l_parser.s"
+	@echo "... l_system.o"
+	@echo "... l_system.i"
+	@echo "... l_system.s"
+	@echo "... lines.o"
+	@echo "... lines.i"
+	@echo "... lines.s"
 .PHONY : help
 
 

@@ -5,28 +5,62 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include <chrono>
+
+#include "l_parser.h"
+#include "l_system.h"
+#include "easy_image.h"
 
 
+
+class Timer{
+
+public:
+    Timer(){
+        m_startpoint = std::chrono::high_resolution_clock::now();
+    }
+
+     ~Timer(){
+        Stop();
+    }
+
+    void Stop(){
+        auto endpoint = std::chrono::high_resolution_clock::now();
+
+        auto start = std::chrono::time_point_cast<std::chrono::microseconds>(m_startpoint).time_since_epoch().count();
+        auto end = std::chrono::time_point_cast<std::chrono::microseconds>(endpoint).time_since_epoch().count();
+        std::cout << end - start;
+    }
+
+private:
+    std::chrono::time_point<std::chrono::high_resolution_clock> m_startpoint;
+
+};
 
 img::EasyImage generate_image(const ini::Configuration &configuration)
 {
-    int width = configuration["ImageProperties"]["width"].as_int_or_die();
-    int heigth = configuration["ImageProperties"]["height"].as_int_or_die();
-    img::EasyImage image(width, heigth);
+    Timer timer;
 
-    if(configuration["General"]["type"].as_string_or_die() == "IntroColorRectangle") {
-        for (unsigned int i = 0; i < width; i++) {
-            for (unsigned int j = 0; j < heigth; j++) {
-                image(i, j).red = i*256/width;
-                image(i, j).green = j*256/heigth;
-                image(i, j).blue = (i *256/width + j*256/heigth) % 256;
-            }
+    if(configuration["General"]["type"].as_string_or_die() == "2DLSystem"){
+        using namespace::l_system2d;
+
+        LParser::LSystem2D l_system;
+        std::ifstream file(configuration["2DLSystem"]["inputfile"].as_string_or_die());
+        file >> l_system;
+        ini::DoubleTuple lineColor = configuration["2DLSystem"]["color"].as_double_tuple_or_die();
+        img::Color line_c(lineColor[0]*255, lineColor[1]*255, lineColor[2]*255);
+        std::shared_ptr<Lines2D> lines = calcLSystem(l_system, line_c);
+
+        ini::DoubleTuple background = configuration["General"]["backgroundcolor"].as_double_tuple_or_die();
+        img::Color bg(uint8_t (background[0]*255), uint8_t (background[1]*255), uint8_t (background[2]*255));
+//        bg.red = background[0]*256; bg.green = background[1]*256; bg.blue = background[2]*256;
+        std::pair<int, int > size = scaleLines(*lines.get(), configuration["General"]["size"].as_int_or_die());
+//        bg.red = uint8_t (background[0] *255);
+        img::EasyImage image(size.first, size.second, bg);
+        for (auto i : *lines.get()){
+            image.draw_line(i.p1.x, i.p1.y, i.p2.x, i.p2.y, i.color);
         }
         return image;
-    }
-
-    else if(configuration["General"]["type"].as_string_or_die() == "2DLSystem"){
-
     }
 }
 

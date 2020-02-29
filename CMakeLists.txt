@@ -17,14 +17,15 @@ set(engine_sources
 	easy_image.cc
 	engine.cc
 	ini_configuration.cc
-)
+	l_parser.cc
+	)
 
 ############################################################
 # Files made by student
 ############################################################
+
 set(student_files
-		L2DSystem.cpp
-		)
+		Utils.h L2DSystem.cc L2DSystem.h lines.cc lines.h l_system.cc l_system.h)
 
 ############################################################
 # Create an executable

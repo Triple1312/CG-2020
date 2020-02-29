@@ -1,8 +1,11 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/engine.dir/L2DSystem.cpp.o"
+  "CMakeFiles/engine.dir/L2DSystem.cc.o"
   "CMakeFiles/engine.dir/easy_image.cc.o"
   "CMakeFiles/engine.dir/engine.cc.o"
   "CMakeFiles/engine.dir/ini_configuration.cc.o"
+  "CMakeFiles/engine.dir/l_parser.cc.o"
+  "CMakeFiles/engine.dir/l_system.cc.o"
+  "CMakeFiles/engine.dir/lines.cc.o"
   "engine"
   "engine.pdb"
 )
