@@ -2,34 +2,38 @@
 // Created by Phili on 2/27/2020.
 //
 
-#ifndef ENGINE_L_SYSTEM_H
-#define ENGINE_L_SYSTEM_H
+#ifndef L_SYSTEM_H_
+#define L_SYSTEM_H_
 
 #include <iostream>
 #include <cmath>
 #include <memory>
 #include <stack>
+#include <utility>
+#include <string>
+#include <tuple>
 
 #include "l_parser.h"
 #include "lines.h"
 
-//namespace{
-//
-//} // namespace
-
+/// a namespace for 2d LSystems
 namespace l_system2d {
     using namespace lines_2d;
 
-   std::shared_ptr<Lines2D> calcLSystem(const LParser::LSystem2D &l_system, img::Color& linecolor);
+    /// Function a
+    /// \param l_system
+    /// \param linecolor
+    /// \return all the lines of the LSystem
+   std::shared_ptr<Lines2D> calcLSystem(const LParser::LSystem2D &l_system, const img::Color& linecolor);
 
+   /// Function that calculates the endpoints of a line
+   /// \return the end x and end y coordinate of a line
    std::pair<double,double> l_calc_line(const double&, const double&, const double&, const double&);
 
+}  // namespace l_system2d
 
+namespace l_system3d {
 
-} // namespace l_system2d
+}  // namespace l_system3d
 
-namespace l_system3d{
-
-} // namespace l_system3d
-
-#endif //ENGINE_L_SYSTEM_H
+#endif  // L_SYSTEM_H_

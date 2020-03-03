@@ -1,18 +1,17 @@
-#include "easy_image.h"
-#include "ini_configuration.h"
-
 #include <fstream>
 #include <iostream>
-#include <stdexcept>
 #include <string>
 #include <chrono>
 
+#include "easy_image.h"
+#include "ini_configuration.h"
+
 #include "l_parser.h"
 #include "l_system.h"
-#include "easy_image.h"
 
 
 
+///based on https://www.youtube.com/watch?v=YG4jexlSAjc&list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb&index=74
 class Timer{
 
 public:
@@ -27,8 +26,8 @@ public:
     void Stop(){
         auto endpoint = std::chrono::high_resolution_clock::now();
 
-        auto start = std::chrono::time_point_cast<std::chrono::microseconds>(m_startpoint).time_since_epoch().count();
-        auto end = std::chrono::time_point_cast<std::chrono::microseconds>(endpoint).time_since_epoch().count();
+        auto start = std::chrono::time_point_cast<std::chrono::milliseconds>(m_startpoint).time_since_epoch().count();
+        auto end = std::chrono::time_point_cast<std::chrono::milliseconds>(endpoint).time_since_epoch().count();
         std::cout << end - start;
     }
 
@@ -37,8 +36,7 @@ private:
 
 };
 
-img::EasyImage generate_image(const ini::Configuration &configuration)
-{
+img::EasyImage generate_image(const ini::Configuration &configuration) {
     Timer timer;
 
     if(configuration["General"]["type"].as_string_or_die() == "2DLSystem"){
@@ -54,14 +52,16 @@ img::EasyImage generate_image(const ini::Configuration &configuration)
         ini::DoubleTuple background = configuration["General"]["backgroundcolor"].as_double_tuple_or_die();
         img::Color bg(uint8_t (background[0]*255), uint8_t (background[1]*255), uint8_t (background[2]*255));
 //        bg.red = background[0]*256; bg.green = background[1]*256; bg.blue = background[2]*256;
-        std::pair<int, int > size = scaleLines(*lines.get(), configuration["General"]["size"].as_int_or_die());
+        std::pair<int, int > size = scaleLines(lines, configuration["General"]["size"].as_int_or_die());
 //        bg.red = uint8_t (background[0] *255);
         img::EasyImage image(size.first, size.second, bg);
-        for (auto i : *lines.get()){
+        for (auto& i : *lines.get()){
             image.draw_line(i.p1.x, i.p1.y, i.p2.x, i.p2.y, i.color);
         }
         return image;
     }
+    img::EasyImage blub;
+    return blub;
 }
 
 int main(int argc, char const* argv[])

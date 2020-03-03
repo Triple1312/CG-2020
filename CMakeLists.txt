@@ -25,7 +25,7 @@ set(engine_sources
 ############################################################
 
 set(student_files
-		Utils.h L2DSystem.cc L2DSystem.h lines.cc lines.h l_system.cc l_system.h)
+		lines.cc lines.h l_system.cc l_system.h)
 
 ############################################################
 # Create an executable
