@@ -18,6 +18,8 @@ set(engine_sources
 	engine.cc
 	ini_configuration.cc
 	l_parser.cc
+	vector3d.h
+	vector3d.cc
 	)
 
 ############################################################
@@ -25,7 +27,7 @@ set(engine_sources
 ############################################################
 
 set(student_files
-		lines.cc lines.h l_system.cc l_system.h)
+		lines.cc lines.h l_system.cc l_system.h Figures3D.cc Figures3D.h)
 
 ############################################################
 # Create an executable

@@ -10,6 +10,7 @@
 #include <memory>
 #include <vector>
 #include <utility>
+#include <tuple>
 
 #include "l_parser.h"
 #include "ini_configuration.h"
@@ -27,6 +28,8 @@ namespace lines_2d {
             : x(coords.first), y(coords.second) {}
         double x;
         double y;
+
+        Point2D();
     };
 
     /// struct that defines a line
@@ -36,9 +39,12 @@ namespace lines_2d {
         Point2D p1;
         Point2D p2;
         img::Color color;
+
+        Line2D();
     };
 
     using Lines2D = std::vector<Line2D>;
+
 
     /// Function that returns a pair with
     /// the minimum x and maximum x of a vector of lines.
@@ -57,8 +63,40 @@ namespace lines_2d {
     /// \param size
     /// \return std::pair<double, double> with the size for x and y of picture
     std::pair<int, int> scaleLines(
-            std::shared_ptr<Lines2D> lines, const int& size);
+            Lines2D &lines, const int& size);
 
 }  // namespace lines_2d
+
+namespace lines_3d{
+
+    struct Vector3D{
+        double x;
+        double y;
+        double z;
+
+        Vector3D(double x, double y, double z) : x(x), y(y), z(z) {}
+    };
+
+    struct Point3D{
+        double x;
+        double y;
+        double z;
+
+        Point3D(double x, double y, double z) : x(x), y(y), z(z) {}
+
+        explicit Point3D(std::vector<double>);  //kan effectiever
+
+        explicit Point3D(std::tuple<double, double, double> coords);
+
+        Vector3D operator - (const Point3D& point);
+
+    };
+
+
+
+
+
+
+}
 
 #endif  // LINES_H_

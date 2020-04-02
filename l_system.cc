@@ -27,10 +27,10 @@ namespace {
 
 namespace l_system2d {
 
-    std::shared_ptr<Lines2D> calcLSystem(
+    Lines2D calcLSystem(
             const LParser::LSystem2D& l_system, const img::Color& linecolor) {
         std::string full_function = getString(l_system);
-        auto lines = std::make_shared<Lines2D>();
+        Lines2D lines  ;
         std::stack<std::tuple<double, double, double>> stack;
         double curr_angle = l_system.get_starting_angle() * M_PI /180;
         double curr_x(0.0), curr_y(0.0);
@@ -53,7 +53,7 @@ namespace l_system2d {
             } else {
                 if (l_system.draw(i)) {
                     auto end = l_calc_line(curr_x, curr_y, 1.0, curr_angle);
-                    lines->push_back(Line2D(Point2D(curr_x, curr_y),
+                    lines.push_back(Line2D(Point2D(curr_x, curr_y),
                                     Point2D(end), linecolor));
 
                     curr_x =  end.first;
@@ -64,7 +64,7 @@ namespace l_system2d {
         return lines;
     }
 
-    std::pair<double, double> l_calc_line(
+    inline std::pair<double, double> l_calc_line(
             const double& start_x, const double& start_y,
             const double& length, const double& angle) {
         return std::pair<double, double>(

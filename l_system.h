@@ -24,11 +24,11 @@ namespace l_system2d {
     /// \param l_system
     /// \param linecolor
     /// \return all the lines of the LSystem
-   std::shared_ptr<Lines2D> calcLSystem(const LParser::LSystem2D &l_system, const img::Color& linecolor);
+   Lines2D calcLSystem(const LParser::LSystem2D &l_system, const img::Color& linecolor);
 
    /// Function that calculates the endpoints of a line
    /// \return the end x and end y coordinate of a line
-   std::pair<double,double> l_calc_line(const double&, const double&, const double&, const double&);
+   inline std::pair<double,double> l_calc_line(const double&, const double&, const double&, const double&);
 
 }  // namespace l_system2d
 
