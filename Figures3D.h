@@ -9,6 +9,7 @@
 #include <vector>
 #include <list>
 #include <cmath>
+#include <tuple>
 
 #include "vector3d.h"
 #include "easy_image.h"
@@ -45,6 +46,8 @@ namespace figures_3d {
     };
 
     typedef std::vector<Figure> Figures3D;
+
+    Figures3D Wireframe(const ini::Configuration &config);
 
 
 

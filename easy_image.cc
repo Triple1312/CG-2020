@@ -204,7 +204,7 @@ img::Color const& img::EasyImage::operator()(unsigned int x, unsigned int y) con
 void img::EasyImage::draw_line(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1, Color color)
 {
 	assert(x0 < this->width && y0 < this->height);
-	assert(x1 < this->width && y1 < this->height);
+	assert(x1 < this->width && y1 < this->height); //todo weer aanpassen
 	if (x0 == x1)
 	{
 		//special case for x0 == x1

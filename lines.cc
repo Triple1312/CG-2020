@@ -32,7 +32,7 @@ namespace lines_2d {
         return std::pair<double,double>(xmin, xmax);
     }
 
-    std::pair<int , int> scaleLines(
+    std::pair<double , double> scaleLines(
             Lines2D &lines, const int& size) {
 
         std::pair<double, double> minmax_x = min_max_x(lines);
@@ -53,12 +53,12 @@ namespace lines_2d {
         double dy = imagey/2 - dc_y;
 
         for (auto& line : lines) {
-            line.p1.x *= scalingfactor; line.p1.x += dx; std::round(line.p1.x);
-            line.p1.y *= scalingfactor; line.p1.y += dy; std::round(line.p1.y);
-            line.p2.x *= scalingfactor; line.p2.x += dx; std::round(line.p2.x);
-            line.p2.y *= scalingfactor; line.p2.y += dy; std::round(line.p2.y);
+            line.p1.x *= scalingfactor; line.p1.x += dx; line.p1.x;
+            line.p1.y *= scalingfactor; line.p1.y += dy; line.p1.y;
+            line.p2.x *= scalingfactor; line.p2.x += dx; line.p2.x;
+            line.p2.y *= scalingfactor; line.p2.y += dy; line.p2.y;
         }
-        return std::pair<int, int>(std::round(imagex), std::round(imagey));
+        return std::pair<double, double>(imagex, imagey);
     }
 
     Line2D::Line2D() = default;

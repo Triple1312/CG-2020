@@ -6,6 +6,137 @@
 
 namespace {
 
+    inline figures_3d::Figure line_drawing(const ini::Configuration &configuration, unsigned int i){
+        figures_3d::Figure figure;
+        for (auto j=0; j < configuration["Figure" + std::to_string(i)]["nrPoints"].as_int_or_die() ; j++){
+            ini::DoubleTuple point = configuration["Figure" + std::to_string(i)]["point" + std::to_string(j)].as_double_tuple_or_die();
+            //Vector3D newPoint = Vector3D::point(point[0], point[1], point[2]);
+            figure.points.push_back(Vector3D::point(point[0], point[1], point[2]));
+        }
+
+        for (auto k = 0; k < configuration["Figure" + std::to_string(i)]["nrLines"].as_int_or_die(); k++ ) {
+            ini::IntTuple line = configuration["Figure" + std::to_string(i)]["line" + std::to_string(k)].as_int_tuple_or_die();
+            //Vector3D newPoint = Vector3D::point(point[0], point[1], point[2]);
+            std::vector<int> line_n; line_n.push_back(line[0]); line_n.push_back(line[1]);
+            figure.faces.push_back(line_n);
+        }
+        return figure;
+    }
+
+    inline figures_3d::Figure cube(const ini::Configuration &configuration, unsigned int i){
+        figures_3d::Figure fig;
+        fig.points.push_back(Vector3D::point(1, 1, 1));
+        fig.points.push_back(Vector3D::point(1, 1, -1));
+        fig.points.push_back(Vector3D::point(1, -1, 1));
+        fig.points.push_back(Vector3D::point(1, -1, -1));
+        fig.points.push_back(Vector3D::point(-1, 1, 1));
+        fig.points.push_back(Vector3D::point(-1, 1, -1));
+        fig.points.push_back(Vector3D::point(-1, -1, 1));
+        fig.points.push_back(Vector3D::point(-1, -1, -1));
+        fig.faces.push_back(std::vector<int>{0, 1});
+        fig.faces.push_back(std::vector<int>{0, 4});
+        fig.faces.push_back(std::vector<int>{0, 2});
+        fig.faces.push_back(std::vector<int>{2, 6});
+        fig.faces.push_back(std::vector<int>{2, 3});
+        fig.faces.push_back(std::vector<int>{4, 6});
+        fig.faces.push_back(std::vector<int>{4, 5});
+        fig.faces.push_back(std::vector<int>{6, 7});
+        fig.faces.push_back(std::vector<int>{1, 3});
+        fig.faces.push_back(std::vector<int>{1, 5});
+        fig.faces.push_back(std::vector<int>{3, 7});
+        fig.faces.push_back(std::vector<int>{5, 7});
+        return fig;
+    }
+
+    inline figures_3d::Figure cylinder(const ini::Configuration &configuration, unsigned int i) {
+        figures_3d::Figure fig;
+        double height = configuration["Figure" + std::to_string(i)]["height"].as_double_or_die();
+        int points_size = configuration["Figure" + std::to_string(i)]["n"].as_int_or_die();
+
+        auto first = Vector3D::point(1, 0, 0); fig.points.push_back(first);
+        auto second = Vector3D::point(1, 0, height); fig.points.push_back(second);
+        std::vector<int> firts_face = {0, 1};
+
+        for (auto j = 2; j < points_size *2 +2 ; j++){ //todo +2 lost iets op
+            auto point1 = Vector3D::point(std::cos(2 * M_PI * j  / points_size), std::sin(2 * M_PI * j  / points_size), 0);
+            auto point2 = Vector3D::point(std::cos(2 * M_PI * j  / points_size), std::sin(2 * M_PI * j  / points_size), height);
+            fig.points.insert(fig.points.begin(), point1);
+            fig.points.insert(fig.points.begin(), point2);
+            std::vector<int> face1;
+            face1.push_back(j); face1.push_back(j + 2);
+            fig.faces.push_back(face1);
+            if (j % 2 == 1){
+                std::vector<int> face2; face2.push_back(j); face2.push_back(j - 1);
+                fig.faces.push_back(face2);
+            }
+        }
+
+        return fig;
+    }
+
+    inline figures_3d::Figure cone(const ini::Configuration &configuration, unsigned int i) {
+        figures_3d::Figure fig;
+        double height = configuration["Figure" + std::to_string(i)]["height"].as_double_or_die();
+        int points_size = configuration["Figure" + std::to_string(i)]["n"].as_int_or_die();
+        auto top = Vector3D::point(0, 0, height);
+        fig.points.push_back(top);
+        auto start_point = Vector3D::point(1, 0, 0); fig.points.push_back(start_point);
+
+        for (auto j = 1; j <= points_size; j++){
+            auto point = Vector3D::point(std::cos(2 * M_PI * j  / points_size), std::sin(2 * M_PI * j  / points_size), 0);
+            fig.points.push_back(point);
+            std::vector<int> face;
+             face.push_back(j); face.push_back(j - 1); face.push_back(0);
+            fig.faces.push_back(face);
+        }
+        std::vector<int> last_face = {0, 1, int(fig.points.size()-2)};
+        fig.faces.push_back(last_face);
+        return fig;
+    }
+
+    inline figures_3d::Figure torus(const ini::Configuration &configuration, unsigned int i){
+        figures_3d::Figure fig;
+        auto R = configuration["Figure" + std::to_string(i)]["R"].as_double_or_die();
+        auto r = configuration["Figure" + std::to_string(i)]["r"].as_double_or_die();
+        auto n = configuration["Figure" + std::to_string(i)]["n"].as_int_or_die();
+        auto m = configuration["Figure" + std::to_string(i)]["m"].as_int_or_die();
+
+        for (auto i = 0; i < n; i++){
+            for (auto j = 0; j < m; j++){
+                double u = 2 * i * M_PI / n;
+                double v = 2 * j * M_PI / m;
+                fig.points.push_back(Vector3D::point(((R + r * std::cos(v)) * std::cos(u)),
+                                                     ((R + r * std::cos(v)) * std::sin(u)),
+                                                     r * std::sin(v)));
+            }
+        }
+
+        for (auto i = 0; i < n; i++){
+            for (auto j = 0; j < m ; j++){ // laatste niet meetellen , gaat dan scheef , dus heeft geen zin
+                std::vector<int> face1 = {i * n + j, i * n + j + 1};
+                std::vector<int> face2 = {i * n + j, i * n + j + m};
+                if (j == m-1){
+                    std::vector<int> face3 = {i * n + j, i * n};
+                    fig.faces.push_back(face3);
+                }
+                else{
+                    fig.faces.push_back(face1);
+                }
+                if (i != n-1){
+                    fig.faces.push_back(face2);
+                }
+                else{
+                    std::vector<int> face4 = {i * n + j, j};
+                    fig.faces.push_back(face4);
+                }
+
+            }
+            std::vector<int> face_last = {i * n , i * n + m-1};
+            //fig.faces.push_back(face_last);
+        }
+        return fig;
+    }
+
     inline Matrix getMatrix_rotate_x(const double &angle){
         Matrix rotate_matrix;
         rotate_matrix( 2, 2) = cos(angle);
@@ -26,7 +157,6 @@ namespace {
 
     inline Matrix getMatrix_rotate_z(const double &angle){
         Matrix rotate_matrix;
-
         rotate_matrix( 1, 1) = cos(angle);
         rotate_matrix( 1, 2) = sin(angle);
         rotate_matrix( 2, 1) = -sin(angle);
@@ -64,10 +194,10 @@ namespace {
 
 void figures_3d::Figure::scale(const double &scale) {
     Matrix scaler;
-    scaler( 0, 0 ) = scale;
     scaler( 1, 1 ) = scale;
     scaler( 2, 2 ) = scale;
-    scaler( 3, 3 ) = 1;
+    scaler( 3, 3 ) = scale;
+    scaler( 4, 4 ) = 1;
 
     for ( auto &point : this->points) {
         point *= scaler;
@@ -117,7 +247,6 @@ lines_2d::Lines2D figures_3d::Figure::project_figure(double d) {
             }
         }
     }
-
     return lines;
 }
 
@@ -128,3 +257,42 @@ void figures_3d::Figure::to_eye( const double &theta, const double &phi, const d
 }
 
 
+figures_3d::Figures3D figures_3d::Wireframe(const ini::Configuration &configuration) {
+    figures_3d::Figures3D figs;
+    int blub = configuration["General"]["nrFigures"].as_int_or_die();
+
+    ini::DoubleTuple eye = configuration["General"]["eye"].as_double_tuple_or_die();
+    for (auto i = 0; i < configuration["General"]["nrFigures"].as_int_or_die(); i++){
+
+        figures_3d::Figure figure;  // todo kan veel beter door direct to initializen in de vector
+        if (configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "LineDrawing"){
+            figure = line_drawing(configuration, i);  // i is the number of the figure
+        }
+        else if(configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "Cube"){
+            figure = cube(configuration, i);
+        }
+        else if(configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "Cone"){
+            figure = cone(configuration, i);
+        }
+        else if(configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "Cylinder"){
+            figure = cylinder(configuration, i);
+        }
+        else if(configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "Torus"){
+            figure = torus(configuration, i);
+        }
+
+
+        ini:: DoubleTuple fig_color = configuration["Figure" + std::to_string(i)]["color"].as_double_tuple_or_die();
+        figure.color = img::Color(fig_color[0]*255, fig_color[1]*255, fig_color[2]*255);
+        double r = std::pow(std::pow(eye[0], 2.0) + std::pow(eye[1], 2.0) + std::pow(eye[2], 2.0), 0.5);
+        ini::DoubleTuple center = configuration["Figure" + std::to_string(i)]["center"].as_double_tuple_or_die();
+        figure.translate(center[0], center[1], center[2]);
+        figure.scale(configuration["Figure" + std::to_string(i)]["scale"].as_double_or_die());
+        figure.rotateX(M_PI /180 * configuration["Figure" + std::to_string(i)]["rotateX"].as_int_or_die());
+        figure.rotateY(M_PI /180 * configuration["Figure" + std::to_string(i)]["rotateY"].as_int_or_die());
+        figure.rotateZ(M_PI /180 * configuration["Figure" + std::to_string(i)]["rotateZ"].as_int_or_die());
+        figure.to_eye( std::atan2(eye[1],eye[0]), std::acos(eye[2] / r), r);
+        figs.push_back(figure);
+    }
+    return figs;
+}

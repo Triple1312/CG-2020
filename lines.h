@@ -62,7 +62,7 @@ namespace lines_2d {
     /// \param lines
     /// \param size
     /// \return std::pair<double, double> with the size for x and y of picture
-    std::pair<int, int> scaleLines(
+    std::pair<double, double> scaleLines(
             Lines2D &lines, const int& size);
 
 }  // namespace lines_2d
