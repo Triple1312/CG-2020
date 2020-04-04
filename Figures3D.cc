@@ -115,6 +115,8 @@ namespace {
             for (auto j = 0; j < m ; j++){ // laatste niet meetellen , gaat dan scheef , dus heeft geen zin
                 std::vector<int> face1 = {i * n + j, i * n + j + 1};
                 std::vector<int> face2 = {i * n + j, i * n + j + m};
+
+                /// {vreemde shit} maar het werkt
                 if (j == m-1){
                     std::vector<int> face3 = {i * n + j, i * n};
                     fig.faces.push_back(face3);
@@ -129,10 +131,25 @@ namespace {
                     std::vector<int> face4 = {i * n + j, j};
                     fig.faces.push_back(face4);
                 }
-
+                // {vreemde shit}
             }
-            std::vector<int> face_last = {i * n , i * n + m-1};
+//            std::vector<int> face_last = {i * n , i * n + m-1};
             //fig.faces.push_back(face_last);
+        }
+        return fig;
+    }
+
+    inline figures_3d::Figure tetrahedron(const ini::Configuration &configuration, unsigned int i){
+        figures_3d::Figure fig;
+        fig.points.push_back(Vector3D::point(1, -1, -1));
+        fig.points.push_back(Vector3D::point(-1, 1, -1));
+        fig.points.push_back(Vector3D::point(1, 1, 1));
+        fig.points.push_back(Vector3D::point(-1, -1, 1));
+        for (auto i = 0; i < 4; i++ ){
+            for (auto j = i + 1 ; j < 4; j++ ){
+                std::vector<int> face = { i, j};
+                fig.faces.push_back(face);
+            }
         }
         return fig;
     }
@@ -279,6 +296,9 @@ figures_3d::Figures3D figures_3d::Wireframe(const ini::Configuration &configurat
         }
         else if(configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "Torus"){
             figure = torus(configuration, i);
+        }
+        else if(configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "Tetrahedron"){
+            figure = tetrahedron(configuration, i);
         }
 
 
