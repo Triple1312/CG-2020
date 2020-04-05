@@ -154,6 +154,117 @@ namespace {
         return fig;
     }
 
+    inline std::vector<std::vector<int>> ico_faces(){
+        std::vector<std::vector<int>> faces;
+        faces.push_back(std::vector<int>{0, 1, 2}); faces.push_back(std::vector<int>{0, 2, 3});
+        faces.push_back(std::vector<int>{0, 3, 4}); faces.push_back(std::vector<int>{0, 4, 5});
+        faces.push_back(std::vector<int>{0, 5, 1}); faces.push_back(std::vector<int>{1, 6, 2});
+        faces.push_back(std::vector<int>{1, 10, 6}); faces.push_back(std::vector<int>{2, 6, 7});
+        faces.push_back(std::vector<int>{2, 7, 3}); faces.push_back(std::vector<int>{3, 7, 8});
+        faces.push_back(std::vector<int>{3, 8, 4}); faces.push_back(std::vector<int>{4, 8, 9});
+        faces.push_back(std::vector<int>{4, 9, 5}); faces.push_back(std::vector<int>{5, 9, 10});
+        faces.push_back(std::vector<int>{5, 10, 1}); faces.push_back(std::vector<int>{11, 6, 10});
+        faces.push_back(std::vector<int>{11, 7, 6}); faces.push_back(std::vector<int>{11, 8, 7});
+        faces.push_back(std::vector<int>{11, 9, 8}); faces.push_back(std::vector<int>{11, 10, 9});
+        return faces;
+    }
+
+    inline figures_3d::Figure icosahedron() {
+        figures_3d::Figure fig;
+        fig.points.push_back(Vector3D::point(0, 0, sqrt(5) / 2));
+        for (auto i = 2; i <= 6; i++) {
+            fig.points.push_back(Vector3D::point(std::cos((i-2) * 2 * M_PI / 5),
+                                                 std::sin((i-2) * 2 * M_PI / 5),
+                                                 0.5));
+        }
+        for (int j = 7; j <= 11 ; j++) {
+            fig.points.push_back(Vector3D::point(std::cos( M_PI / 5 + (j-7) * 2 * M_PI / 5),
+                                                 std::sin( M_PI / 5 + (j-7) * 2 * M_PI / 5),
+                                                 -0.5));
+        }
+        fig.points.push_back(Vector3D::point(0, 0, - sqrt(5) / 2));
+
+        fig.faces = ico_faces();
+        return fig;
+    }
+
+    inline figures_3d::Figure octahedron() {
+        figures_3d::Figure fig;
+        fig.points.push_back(Vector3D::point(1, 0, 0 ));
+        fig.points.push_back(Vector3D::point(0, 1, 0 ));
+        fig.points.push_back(Vector3D::point(-1, 0, 0 ));
+        fig.points.push_back(Vector3D::point(0, -1, 0 ));
+        fig.points.push_back(Vector3D::point(0, 0, -1 ));
+        fig.points.push_back(Vector3D::point(0, 0, 1 ));
+
+        fig.faces.push_back(std::vector<int>{1, 2, 6});
+        fig.faces.push_back(std::vector<int>{2, 3, 6});
+        fig.faces.push_back(std::vector<int>{3, 4, 6});
+        fig.faces.push_back(std::vector<int>{4, 1, 6});
+        fig.faces.push_back(std::vector<int>{2, 1, 5});
+        fig.faces.push_back(std::vector<int>{3, 2, 5});
+        fig.faces.push_back(std::vector<int>{4, 3, 5});
+        fig.faces.push_back(std::vector<int>{1, 4, 5});
+
+        return fig;
+    }
+
+    inline figures_3d::Figure dodecahedron(){
+        figures_3d::Figure ico = icosahedron();
+        figures_3d::Figure fig;
+
+        for (auto i : ico.faces){
+            auto &points = ico.points;
+            fig.points.push_back(Vector3D::point(( points[i[0]].x + points[i[1]].x + points[i[2]].x) / 3,
+                                                 ( points[i[0]].y + points[i[1]].y + points[i[2]].y) / 3,
+                                                 ( points[i[0]].z + points[i[1]].z + points[i[2]].z) / 3) );
+        }
+
+        for (int j = 0; j < fig.points.size(); j++) {
+            for (int k = j+1; k < fig.points.size(); k++) {
+                if ( sqrt(pow(fig.points[j].x + fig.points[k].x, 2) +
+                          pow(fig.points[j].y + fig.points[k].y, 2) +
+                          pow(fig.points[j].z + fig.points[k].z, 2)) > 1.5){
+                    fig.faces.push_back(std::vector<int>{j, k});
+                }
+            }
+        }
+
+        return fig;
+    }
+
+    inline figures_3d::Figure sphere(int n){
+        figures_3d::Figure fig = icosahedron();
+
+        for (auto j = 0; j < n; j++) {
+            auto faces_b_s = fig.faces.size(); // begin size of faces
+            for (int i = 0; i < faces_b_s; i++) {
+                fig.points.push_back((fig.points[fig.faces[0][0]] + fig.points[fig.faces[0][1]]) / 2);
+                fig.points.push_back((fig.points[fig.faces[0][0]] + fig.points[fig.faces[0][2]]) / 2);
+                fig.points.push_back((fig.points[fig.faces[0][1]] + fig.points[fig.faces[0][2]]) / 2);
+
+                fig.faces.push_back(
+                        std::vector<int>{fig.faces[0][0], int(fig.points.size()) - 3, int(fig.points.size()) - 2});
+                fig.faces.push_back(
+                        std::vector<int>{fig.faces[0][1], int(fig.points.size()) - 3, int(fig.points.size()) - 1});
+                fig.faces.push_back(
+                        std::vector<int>{fig.faces[0][2], int(fig.points.size()) - 2, int(fig.points.size()) - 1});
+                fig.faces.push_back(std::vector<int>{int(fig.points.size()) - 1, int(fig.points.size()) - 3,
+                                                     int(fig.points.size()) - 2});
+                fig.faces.erase(fig.faces.begin());
+            }
+
+        }
+
+        for (int k = 0; k < fig.points.size(); k++) {
+            double r = sqrt(pow(fig.points[k].x, 2) +
+                            pow(fig.points[k].y, 2) +
+                            pow(fig.points[k].z, 2));
+            fig.points[k] = fig.points[k] / r;
+        }
+        return fig;
+    }
+
     inline Matrix getMatrix_rotate_x(const double &angle){
         Matrix rotate_matrix;
         rotate_matrix( 2, 2) = cos(angle);
@@ -300,7 +411,18 @@ figures_3d::Figures3D figures_3d::Wireframe(const ini::Configuration &configurat
         else if(configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "Tetrahedron"){
             figure = tetrahedron(configuration, i);
         }
-
+        else if(configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "Icosahedron"){
+            figure = icosahedron();
+        }
+        else if(configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "Octahedron"){
+            figure = octahedron();
+        }
+        else if(configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "Dodecahedron"){
+            figure = dodecahedron();
+        }
+        else if(configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "Sphere"){
+            figure = sphere(configuration["Figure" + std::to_string(i)]["n"].as_int_or_die());
+        }
 
         ini:: DoubleTuple fig_color = configuration["Figure" + std::to_string(i)]["color"].as_double_tuple_or_die();
         figure.color = img::Color(fig_color[0]*255, fig_color[1]*255, fig_color[2]*255);
