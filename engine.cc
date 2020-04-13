@@ -9,6 +9,7 @@
 #include "l_parser.h"
 #include "l_system.h"
 #include "Figures3D.h"
+#include "ZBuffer.h"
 
 
 
@@ -86,8 +87,30 @@ img::EasyImage generate_image(const ini::Configuration &configuration) {
 
         for (auto m : lines) {
             image.draw_line( std::round(m.p1.x), std::round(m.p1.y), std::round(m.p2.x), std::round(m.p2.y), m.color );
+            image(3, 5) = bg;
+
         }
         return image;
+    }
+
+    else if (configuration["General"]["type"].as_string_or_die() == "ZBufferedWireframe"){
+      ini::DoubleTuple background = configuration["General"]["backgroundcolor"].as_double_tuple_or_die();
+      img::Color bg(uint8_t (background[0]*255), uint8_t (background[1]*255), uint8_t (background[2]*255));
+      figures_3d::Figures3D figs = figures_3d::Wireframe(configuration);
+      lines_2d::Lines2D lines;
+
+      for (auto &l : figs) {
+        for (auto n : l.project_figure()){
+          lines.push_back( n );
+        }
+      }
+
+      std::pair<int, int > size = l_system2d::scaleLines(lines, configuration["General"]["size"].as_int_or_die());
+
+      img::EasyImage image(size.first, size.second, bg);
+      zbuffer::ZBuffer buffer(size.first, size.second);
+      return buffer.draw_lines(lines, size.first, size.second);
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////

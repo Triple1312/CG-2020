@@ -20,6 +20,7 @@
 #include <stdint.h>
 #include <vector>
 #include <iostream>
+
 /**
  * \brief The namespace of the EasyImage class
  */
@@ -234,6 +235,7 @@ namespace img
 			 * \brief the vector containing all pixels
 			 */
 			std::vector<Color> bitmap;
+
 	};
 
 	/**

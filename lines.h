@@ -34,11 +34,14 @@ namespace lines_2d {
 
     /// struct that defines a line
     struct Line2D {
-        Line2D(Point2D p1, Point2D p2, img::Color c)
-            : p1(p1), p2(p2), color(c) {}
+        Line2D(Point2D p1, Point2D p2, img::Color c, double z0 = 0, double z1 = 0)
+            : p1(p1), p2(p2), color(c), z0(z0), z1(z1) {}
         Point2D p1;
         Point2D p2;
         img::Color color;
+
+        double z1;
+        double z0;
 
         Line2D();
     };

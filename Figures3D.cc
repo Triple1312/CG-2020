@@ -371,7 +371,7 @@ lines_2d::Lines2D figures_3d::Figure::project_figure(double d) {
                 lines.push_back(lines_2d::Line2D(
                         lines_2d::Point2D(- point1.x * d / point1.z , - point1.y * d / point1.z),
                         lines_2d::Point2D(- point2.x * d / point2.z , - point2.y * d / point2.z),
-                        this->color ));
+                        this->color, point1.z, point2.z ));
             }
         }
     }
