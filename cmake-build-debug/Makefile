@@ -169,32 +169,59 @@ engine/fast:
 	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/build
 .PHONY : engine/fast
 
-L2DSystem.o: L2DSystem.cc.o
+Figures3D.o: Figures3D.cc.o
 
-.PHONY : L2DSystem.o
+.PHONY : Figures3D.o
 
 # target to build an object file
-L2DSystem.cc.o:
-	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/L2DSystem.cc.o
-.PHONY : L2DSystem.cc.o
+Figures3D.cc.o:
+	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/Figures3D.cc.o
+.PHONY : Figures3D.cc.o
 
-L2DSystem.i: L2DSystem.cc.i
+Figures3D.i: Figures3D.cc.i
 
-.PHONY : L2DSystem.i
+.PHONY : Figures3D.i
 
 # target to preprocess a source file
-L2DSystem.cc.i:
-	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/L2DSystem.cc.i
-.PHONY : L2DSystem.cc.i
+Figures3D.cc.i:
+	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/Figures3D.cc.i
+.PHONY : Figures3D.cc.i
 
-L2DSystem.s: L2DSystem.cc.s
+Figures3D.s: Figures3D.cc.s
 
-.PHONY : L2DSystem.s
+.PHONY : Figures3D.s
 
 # target to generate assembly for a file
-L2DSystem.cc.s:
-	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/L2DSystem.cc.s
-.PHONY : L2DSystem.cc.s
+Figures3D.cc.s:
+	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/Figures3D.cc.s
+.PHONY : Figures3D.cc.s
+
+ZBuffer.o: ZBuffer.cc.o
+
+.PHONY : ZBuffer.o
+
+# target to build an object file
+ZBuffer.cc.o:
+	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/ZBuffer.cc.o
+.PHONY : ZBuffer.cc.o
+
+ZBuffer.i: ZBuffer.cc.i
+
+.PHONY : ZBuffer.i
+
+# target to preprocess a source file
+ZBuffer.cc.i:
+	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/ZBuffer.cc.i
+.PHONY : ZBuffer.cc.i
+
+ZBuffer.s: ZBuffer.cc.s
+
+.PHONY : ZBuffer.s
+
+# target to generate assembly for a file
+ZBuffer.cc.s:
+	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/ZBuffer.cc.s
+.PHONY : ZBuffer.cc.s
 
 easy_image.o: easy_image.cc.o
 
@@ -358,6 +385,33 @@ lines.cc.s:
 	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/lines.cc.s
 .PHONY : lines.cc.s
 
+vector3d.o: vector3d.cc.o
+
+.PHONY : vector3d.o
+
+# target to build an object file
+vector3d.cc.o:
+	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/vector3d.cc.o
+.PHONY : vector3d.cc.o
+
+vector3d.i: vector3d.cc.i
+
+.PHONY : vector3d.i
+
+# target to preprocess a source file
+vector3d.cc.i:
+	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/vector3d.cc.i
+.PHONY : vector3d.cc.i
+
+vector3d.s: vector3d.cc.s
+
+.PHONY : vector3d.s
+
+# target to generate assembly for a file
+vector3d.cc.s:
+	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/vector3d.cc.s
+.PHONY : vector3d.cc.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -371,9 +425,12 @@ help:
 	@echo "... edit_cache"
 	@echo "... install"
 	@echo "... list_install_components"
-	@echo "... L2DSystem.o"
-	@echo "... L2DSystem.i"
-	@echo "... L2DSystem.s"
+	@echo "... Figures3D.o"
+	@echo "... Figures3D.i"
+	@echo "... Figures3D.s"
+	@echo "... ZBuffer.o"
+	@echo "... ZBuffer.i"
+	@echo "... ZBuffer.s"
 	@echo "... easy_image.o"
 	@echo "... easy_image.i"
 	@echo "... easy_image.s"
@@ -392,6 +449,9 @@ help:
 	@echo "... lines.o"
 	@echo "... lines.i"
 	@echo "... lines.s"
+	@echo "... vector3d.o"
+	@echo "... vector3d.i"
+	@echo "... vector3d.s"
 .PHONY : help
 
 

@@ -6,6 +6,8 @@
 #define ENGINE_FIGURES3D_H
 
 #include <iostream>
+#include <utility>
+#include <utility>
 #include <vector>
 #include <list>
 #include <cmath>
@@ -25,10 +27,10 @@ namespace figures_3d {
         std::vector<Face> faces;
         img::Color color;
 
-        Figure() {}
+        Figure() = default;
 
         Figure(std::vector<Vector3D> points, std::vector<Face> faces, img::Color &color)
-                    : points(points), faces(faces), color(color) {}
+                    : points(std::move(std::move(points))), faces(std::move(std::move(faces))), color(color) {}
 
         void scale(const double &scale);
 

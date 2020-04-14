@@ -1,11 +1,13 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/engine.dir/L2DSystem.cc.o"
+  "CMakeFiles/engine.dir/Figures3D.cc.o"
+  "CMakeFiles/engine.dir/ZBuffer.cc.o"
   "CMakeFiles/engine.dir/easy_image.cc.o"
   "CMakeFiles/engine.dir/engine.cc.o"
   "CMakeFiles/engine.dir/ini_configuration.cc.o"
   "CMakeFiles/engine.dir/l_parser.cc.o"
   "CMakeFiles/engine.dir/l_system.cc.o"
   "CMakeFiles/engine.dir/lines.cc.o"
+  "CMakeFiles/engine.dir/vector3d.cc.o"
   "engine"
   "engine.pdb"
 )

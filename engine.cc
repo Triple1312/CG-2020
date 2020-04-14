@@ -52,16 +52,17 @@ img::EasyImage generate_image(const ini::Configuration &configuration) {
         ini::DoubleTuple lineColor = configuration["2DLSystem"]["color"].as_double_tuple_or_die();
         img::Color line_c(lineColor[0]*255, lineColor[1]*255, lineColor[2]*255);
         Lines2D lines = calcLSystem(l_system, line_c);
-        lines.resize(1024, lines_2d::Line2D());
+        //lines.resize(1023, lines_2d::Line2D());
 
         ini::DoubleTuple background = configuration["General"]["backgroundcolor"].as_double_tuple_or_die();
         img::Color bg(uint8_t (background[0]*255), uint8_t (background[1]*255), uint8_t (background[2]*255));
 //        bg.red = background[0]*256; bg.green = background[1]*256; bg.blue = background[2]*256;
-        std::pair<int, int > size = scaleLines(lines, configuration["General"]["size"].as_int_or_die());
+        std::pair<int, int > size = scaleLines(lines, configuration["General"]["size"].as_int_or_die()); //todo voor hier
 //        bg.red = uint8_t (background[0] *255);
         img::EasyImage image(size.first, size.second, bg);
+        std::cout << lines.size() << std::endl;
         for (auto& i : lines){
-            image.draw_line(i.p1.x, i.p1.y, i.p2.x, i.p2.y, i.color);
+            image.draw_line((unsigned int) round(i.p1.x), (unsigned int) std::round(i.p1.y),(unsigned int)std::round(i.p2.x), (unsigned int)std::round(i.p2.y), i.color);
         }
         return image;
     }
@@ -85,7 +86,7 @@ img::EasyImage generate_image(const ini::Configuration &configuration) {
         std::pair<int, int > size = l_system2d::scaleLines(lines, configuration["General"]["size"].as_int_or_die());
         img::EasyImage image(size.first, size.second, bg);
 
-        for (auto m : lines) {
+        for (const auto& m : lines) {
             image.draw_line( std::round(m.p1.x), std::round(m.p1.y), std::round(m.p2.x), std::round(m.p2.y), m.color );
             image(3, 5) = bg;
 

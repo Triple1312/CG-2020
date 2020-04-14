@@ -26,22 +26,22 @@ namespace lines_2d {
 
         explicit Point2D(std::pair<double, double> coords)
             : x(coords.first), y(coords.second) {}
-        double x;
-        double y;
+        double x{};
+        double y{};
 
         Point2D();
     };
 
     /// struct that defines a line
     struct Line2D {
-        Line2D(Point2D p1, Point2D p2, img::Color c, double z0 = 0, double z1 = 0)
+        Line2D(Point2D p1, Point2D p2, const img::Color& c, double z0 = 0, double z1 = 0)
             : p1(p1), p2(p2), color(c), z0(z0), z1(z1) {}
         Point2D p1;
         Point2D p2;
         img::Color color;
 
-        double z1;
-        double z0;
+        double z1{};
+        double z0{};
 
         Line2D();
     };
@@ -65,7 +65,7 @@ namespace lines_2d {
     /// \param lines
     /// \param size
     /// \return std::pair<double, double> with the size for x and y of picture
-    std::pair<double, double> scaleLines(
+    std::pair<int, int> scaleLines(
             Lines2D &lines, const int& size);
 
 }  // namespace lines_2d
@@ -81,9 +81,9 @@ namespace lines_3d{
     };
 
     struct Point3D{
-        double x;
-        double y;
-        double z;
+        double x{};
+        double y{};
+        double z{};
 
         Point3D(double x, double y, double z) : x(x), y(y), z(z) {}
 

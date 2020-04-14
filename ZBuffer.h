@@ -9,7 +9,7 @@
 #include <vector>
 #include <limits>
 #include <iostream>
-#include <assert.h>
+#include <cassert>
 #include <utility>
 #include <cmath>
 

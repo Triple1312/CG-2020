@@ -6,6 +6,32 @@
 
 #IncludeRegexTransform: 
 
+/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Figures3D.cc
+Figures3D.h
+/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Figures3D.h
+
+/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Figures3D.h
+iostream
+-
+utility
+-
+utility
+-
+vector
+-
+list
+-
+cmath
+-
+tuple
+-
+vector3d.h
+/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/vector3d.h
+easy_image.h
+/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/easy_image.h
+lines.h
+/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/lines.h
+
 /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/easy_image.h
 stdint.h
 -
@@ -36,12 +62,6 @@ set
 exception
 -
 
-/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/lines.cc
-cmath
--
-lines.h
-/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/lines.h
-
 /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/lines.h
 iostream
 -
@@ -49,10 +69,20 @@ string
 -
 memory
 -
+vector
+-
+utility
+-
+tuple
+-
 l_parser.h
 /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/l_parser.h
 ini_configuration.h
 /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/ini_configuration.h
 easy_image.h
 /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/easy_image.h
+
+/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/vector3d.h
+iostream
+-
 

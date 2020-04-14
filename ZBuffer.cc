@@ -13,7 +13,7 @@ img::EasyImage zbuffer::ZBuffer::draw_lines( lines_2d::Lines2D &lines, const int
   img::EasyImage image(width, height);
   int linecount = 0;
 
-  for (auto l : lines){
+  for (const auto& l : lines){
     linecount +=1;
     if (linecount% 1000 == 0) {
       std::cout << linecount << std::endl << std::flush;

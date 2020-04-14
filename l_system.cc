@@ -35,7 +35,11 @@ namespace l_system2d {
         double curr_angle = l_system.get_starting_angle() * M_PI /180;
         double curr_x(0.0), curr_y(0.0);
         double angle = l_system.get_angle()* M_PI / 180;
+        int test = 0;
+
+        int counter = 0;
         for (char& i : full_function) {
+
             if (i == '+') {
                 curr_angle += angle;
 
@@ -51,7 +55,9 @@ namespace l_system2d {
                 stack.pop();
 
             } else {
+              test += 1;
                 if (l_system.draw(i)) {
+                    counter += 1;
                     auto end = l_calc_line(curr_x, curr_y, 1.0, curr_angle);
                     lines.push_back(Line2D(Point2D(curr_x, curr_y),
                                     Point2D(end), linecolor));
@@ -61,6 +67,8 @@ namespace l_system2d {
                 }
             }
         }
+        std::cout << test << std::endl;
+        std::cout << counter << std::endl;
         return lines;
     }
 

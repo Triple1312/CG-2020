@@ -124,13 +124,16 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/L2DSystem.cc">
+		<Unit filename="/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Figures3D.cc">
 			<Option target="engine"/>
 		</Unit>
-		<Unit filename="/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/L2DSystem.h">
+		<Unit filename="/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Figures3D.h">
 			<Option target="engine"/>
 		</Unit>
-		<Unit filename="/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Utils.h">
+		<Unit filename="/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/ZBuffer.cc">
+			<Option target="engine"/>
+		</Unit>
+		<Unit filename="/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/ZBuffer.h">
 			<Option target="engine"/>
 		</Unit>
 		<Unit filename="/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/easy_image.cc">
@@ -164,6 +167,12 @@
 			<Option target="engine"/>
 		</Unit>
 		<Unit filename="/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/lines.h">
+			<Option target="engine"/>
+		</Unit>
+		<Unit filename="/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/vector3d.cc">
+			<Option target="engine"/>
+		</Unit>
+		<Unit filename="/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/vector3d.h">
 			<Option target="engine"/>
 		</Unit>
 		<Unit filename="/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/CMakeLists.txt">

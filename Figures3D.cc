@@ -428,11 +428,13 @@ figures_3d::Figures3D figures_3d::Wireframe(const ini::Configuration &configurat
         figure.color = img::Color(fig_color[0]*255, fig_color[1]*255, fig_color[2]*255);
         double r = std::pow(std::pow(eye[0], 2.0) + std::pow(eye[1], 2.0) + std::pow(eye[2], 2.0), 0.5);
         ini::DoubleTuple center = configuration["Figure" + std::to_string(i)]["center"].as_double_tuple_or_die();
-        figure.translate(center[0], center[1], center[2]);
+
         figure.scale(configuration["Figure" + std::to_string(i)]["scale"].as_double_or_die());
+
         figure.rotateX(M_PI /180 * configuration["Figure" + std::to_string(i)]["rotateX"].as_int_or_die());
         figure.rotateY(M_PI /180 * configuration["Figure" + std::to_string(i)]["rotateY"].as_int_or_die());
         figure.rotateZ(M_PI /180 * configuration["Figure" + std::to_string(i)]["rotateZ"].as_int_or_die());
+        figure.translate(center[0], center[1], center[2]);
         figure.to_eye( std::atan2(eye[1],eye[0]), std::acos(eye[2] / r), r);
         figs.push_back(figure);
     }
