@@ -25,52 +25,49 @@ namespace {
 
     inline figures_3d::Figure cube(const ini::Configuration &configuration, unsigned int i){
         figures_3d::Figure fig;
-        fig.points.push_back(Vector3D::point(1, 1, 1));
-        fig.points.push_back(Vector3D::point(1, 1, -1));
-        fig.points.push_back(Vector3D::point(1, -1, 1));
         fig.points.push_back(Vector3D::point(1, -1, -1));
-        fig.points.push_back(Vector3D::point(-1, 1, 1));
         fig.points.push_back(Vector3D::point(-1, 1, -1));
+        fig.points.push_back(Vector3D::point(1, 1, 1));
         fig.points.push_back(Vector3D::point(-1, -1, 1));
+        fig.points.push_back(Vector3D::point(1, 1, -1));
         fig.points.push_back(Vector3D::point(-1, -1, -1));
-        fig.faces.push_back(std::vector<int>{0, 1});
-        fig.faces.push_back(std::vector<int>{0, 4});
-        fig.faces.push_back(std::vector<int>{0, 2});
-        fig.faces.push_back(std::vector<int>{2, 6});
-        fig.faces.push_back(std::vector<int>{2, 3});
-        fig.faces.push_back(std::vector<int>{4, 6});
-        fig.faces.push_back(std::vector<int>{4, 5});
-        fig.faces.push_back(std::vector<int>{6, 7});
-        fig.faces.push_back(std::vector<int>{1, 3});
-        fig.faces.push_back(std::vector<int>{1, 5});
-        fig.faces.push_back(std::vector<int>{3, 7});
-        fig.faces.push_back(std::vector<int>{5, 7});
+        fig.points.push_back(Vector3D::point(1, -1, 1));
+        fig.points.push_back(Vector3D::point(-1, 1, 1));
+        fig.faces.push_back(std::vector<int>{0, 5, 1, 4});
+        fig.faces.push_back(std::vector<int>{6, 3, 7, 2});
+        fig.faces.push_back(std::vector<int>{1, 5, 3, 7});
+        fig.faces.push_back(std::vector<int>{2, 6, 0, 4});
+        fig.faces.push_back(std::vector<int>{0, 5, 3, 6});
+        fig.faces.push_back(std::vector<int>{2, 7, 1, 4});
         return fig;
     }
 
     inline figures_3d::Figure cylinder(const ini::Configuration &configuration, unsigned int i) {
         figures_3d::Figure fig;
         double height = configuration["Figure" + std::to_string(i)]["height"].as_double_or_die();
-        int points_size = configuration["Figure" + std::to_string(i)]["n"].as_int_or_die();
-
-        auto first = Vector3D::point(1, 0, 0); fig.points.push_back(first);
-        auto second = Vector3D::point(1, 0, height); fig.points.push_back(second);
+        int n = configuration["Figure" + std::to_string(i)]["n"].as_int_or_die();
         std::vector<int> firts_face = {0, 1};
 
-        for (auto j = 2; j < points_size *2 +2 ; j++){ //todo +2 lost iets op
-            auto point1 = Vector3D::point(std::cos(2 * M_PI * j  / points_size), std::sin(2 * M_PI * j  / points_size), 0);
-            auto point2 = Vector3D::point(std::cos(2 * M_PI * j  / points_size), std::sin(2 * M_PI * j  / points_size), height);
-            fig.points.insert(fig.points.begin(), point1);
-            fig.points.insert(fig.points.begin(), point2);
-            std::vector<int> face1;
-            face1.push_back(j); face1.push_back(j + 2);
-            fig.faces.push_back(face1);
-            if (j % 2 == 1){
-                std::vector<int> face2; face2.push_back(j); face2.push_back(j - 1);
-                fig.faces.push_back(face2);
-            }
+        for (int i = 0; i < n; i++) {
+          fig.points.emplace_back(Vector3D::point(std::cos(2 * M_PI * i  / n),
+                                                  std::sin(2 * M_PI * i  / n), 0));
         }
-
+        for (int i = 0; i < n; i++) {
+          fig.points.emplace_back(Vector3D::point(std::cos(2 * M_PI * i  / n),
+                                                  std::sin(2 * M_PI * i  / n), height));
+        }
+        for (int j = 0; j < n-1; j++) {
+          fig.faces.push_back(std::vector<int>{j, j+1, j+n+1, j+n});
+        }
+        fig.faces.push_back(std::vector<int>{0, n-1, 2*n -1, n});
+        std::vector<int> onder;
+        std::vector<int> boven;
+        for (int k = 0; k < n; k++) {
+          onder.push_back(k);
+          boven.push_back(n+k);
+        }
+        fig.faces.push_back(onder);
+        fig.faces.push_back(boven);
         return fig;
     }
 
@@ -110,31 +107,10 @@ namespace {
                                                      r * std::sin(v)));
             }
         }
-
         for (auto i = 0; i < n; i++){
-            for (auto j = 0; j < m ; j++){ // laatste niet meetellen , gaat dan scheef , dus heeft geen zin
-                std::vector<int> face1 = {i * n + j, i * n + j + 1};
-                std::vector<int> face2 = {i * n + j, i * n + j + m};
-
-                /// {vreemde shit} maar het werkt
-                if (j == m-1){
-                    std::vector<int> face3 = {i * n + j, i * n};
-                    fig.faces.push_back(face3);
-                }
-                else{
-                    fig.faces.push_back(face1);
-                }
-                if (i != n-1){
-                    fig.faces.push_back(face2);
-                }
-                else{
-                    std::vector<int> face4 = {i * n + j, j};
-                    fig.faces.push_back(face4);
-                }
-                // {vreemde shit}
-            }
-//            std::vector<int> face_last = {i * n , i * n + m-1};
-            //fig.faces.push_back(face_last);
+          for (auto j = 0; j < m; j++){
+            fig.faces.push_back(std::vector<int>{i*m+j, ((i+1)%n)*m+j,((i+1)%n)*m+((j+1)%m), i*m+((j+1)%m)});
+          }
         }
         return fig;
     }
@@ -145,12 +121,10 @@ namespace {
         fig.points.push_back(Vector3D::point(-1, 1, -1));
         fig.points.push_back(Vector3D::point(1, 1, 1));
         fig.points.push_back(Vector3D::point(-1, -1, 1));
-        for (auto i = 0; i < 4; i++ ){
-            for (auto j = i + 1 ; j < 4; j++ ){
-                std::vector<int> face = { i, j};
-                fig.faces.push_back(face);
-            }
-        }
+        fig.faces.push_back(std::vector<int>{0, 1, 2});
+        fig.faces.push_back(std::vector<int>{0, 2, 3});
+        fig.faces.push_back(std::vector<int>{0, 1, 3});
+        fig.faces.push_back(std::vector<int>{1, 2, 3});
         return fig;
     }
 
@@ -225,7 +199,7 @@ namespace {
                 if ( sqrt(pow(fig.points[j].x + fig.points[k].x, 2) +
                           pow(fig.points[j].y + fig.points[k].y, 2) +
                           pow(fig.points[j].z + fig.points[k].z, 2)) > 1.5){
-                    fig.faces.push_back(std::vector<int>{j, k});
+                    fig.faces.push_back(std::vector<int>{j, k}); // todo fixen
                 }
             }
         }
@@ -364,16 +338,21 @@ void figures_3d::Figure::translate(const double &x, const double &y, const doubl
 lines_2d::Lines2D figures_3d::Figure::project_figure(double d) {
     lines_2d::Lines2D lines;
     for (auto k = 0; k < this->faces.size(); k++){
-        for (auto i = 0; i < this->faces[k].size(); i ++){
-            for (auto j = i+1; j < this->faces[k].size() ; j++ ){
-                Vector3D &point1 = this->points[this->faces[k][i]];
-                Vector3D &point2 = this->points[this->faces[k][j]];
-                lines.push_back(lines_2d::Line2D(
-                        lines_2d::Point2D(- point1.x * d / point1.z , - point1.y * d / point1.z),
-                        lines_2d::Point2D(- point2.x * d / point2.z , - point2.y * d / point2.z),
-                        this->color, point1.z, point2.z ));
-            }
+        for (auto i = 0; i < this->faces[k].size()-1; i ++){
+            Vector3D &point1 = this->points[this->faces[k][i]];
+            Vector3D &point2 = this->points[this->faces[k][i+1]];
+            lines.push_back(lines_2d::Line2D(
+                    lines_2d::Point2D(- point1.x * d / point1.z , - point1.y * d / point1.z),
+                    lines_2d::Point2D(- point2.x * d / point2.z , - point2.y * d / point2.z),
+                    this->color, point1.z, point2.z ));
+
         }
+        Vector3D &point1 = this->points[this->faces[k][0]];
+        Vector3D &point2 = this->points[this->faces[k][this->faces[k].size()-1]];
+        lines.push_back(lines_2d::Line2D(
+            lines_2d::Point2D(- point1.x * d / point1.z , - point1.y * d / point1.z),
+            lines_2d::Point2D(- point2.x * d / point2.z , - point2.y * d / point2.z),
+            this->color, point1.z, point2.z ));
     }
     return lines;
 }
@@ -431,12 +410,105 @@ figures_3d::Figures3D figures_3d::Wireframe(const ini::Configuration &configurat
 
         figure.scale(configuration["Figure" + std::to_string(i)]["scale"].as_double_or_die());
 
-        figure.rotateX(M_PI /180 * configuration["Figure" + std::to_string(i)]["rotateX"].as_int_or_die());
-        figure.rotateY(M_PI /180 * configuration["Figure" + std::to_string(i)]["rotateY"].as_int_or_die());
-        figure.rotateZ(M_PI /180 * configuration["Figure" + std::to_string(i)]["rotateZ"].as_int_or_die());
+        figure.rotateX(M_PI /180 * configuration["Figure" + std::to_string(i)]["rotateX"].as_double_or_die());
+        figure.rotateY(M_PI /180 * configuration["Figure" + std::to_string(i)]["rotateY"].as_double_or_die());
+        figure.rotateZ(M_PI /180 * configuration["Figure" + std::to_string(i)]["rotateZ"].as_double_or_die());
         figure.translate(center[0], center[1], center[2]);
         figure.to_eye( std::atan2(eye[1],eye[0]), std::acos(eye[2] / r), r);
         figs.push_back(figure);
     }
     return figs;
+}
+
+std::vector<figures_3d::Face> figures_3d::triangulate(figures_3d::Face & face) {
+  std::vector<Face> new_faces;
+  for( auto i = 1; i < face.size() - 1; i++ ){
+    Face new_face; new_face.push_back(face[0]);
+    new_face.push_back(face[i]); new_face.push_back(face[i+1]);
+    new_faces.push_back(new_face);
+  }
+  return new_faces;
+}
+
+std::vector<figures_3d::Face> figures_3d::triangulate(std::vector<figures_3d::Face> &faces ) {
+  std::vector<Face> new_faces;
+  for(auto i : faces){
+      for (auto j : triangulate(i)){
+        new_faces.emplace_back(j);
+      }
+  }
+  return new_faces;
+}
+
+void figures_3d::draw_triangle(const Vector3D &A,
+                               const Vector3D &B,
+                               const Vector3D &C,
+                               double dx,
+                               double dy,
+                               img::EasyImage &image,
+                               zbuffer::ZBuffer &buffer,
+                               img::Color& color,
+                               double d) {
+
+  lines_2d::Point2D pa(d * A.x / (- A.z) + dx, d * A.y / (- A.z) + dy);
+  lines_2d::Point2D pb(d * B.x / (- B.z) + dx, d * B.y / (- B.z) + dy);
+  lines_2d::Point2D pc(d * C.x / (- C.z) + dx, d * C.y / (- C.z) + dy);
+  std::vector<double> y; y.push_back(pa.y);
+  y.push_back(pb.y); y.push_back(pc.y);
+
+  for (int yi = tools::d2i(min(y)+0.5); yi <= tools::d2i(max(y) -0.5); yi++) {
+    std::vector<double> xl = {std::numeric_limits<double>::infinity(),
+                   std::numeric_limits<double>::infinity(),
+                   std::numeric_limits<double>::infinity()};
+    std::vector<double> xr = { - std::numeric_limits<double>::infinity(),
+                    - std::numeric_limits<double>::infinity(),
+                    - std::numeric_limits<double>::infinity()};
+    if ( (yi - pb.y)*(yi - pa.y) <= 0) {
+      xl[0] = xr[0] = pa.x + (pb.x - pa.x) * (yi - pa.y) / (pb.y - pa.y);
+    }
+    if ( (yi - pc.y)*(yi - pa.y) <= 0) {
+      xl[1] = xr[1] = pa.x + (pc.x - pa.x) * (yi - pa.y) / (pc.y - pa.y);
+    }
+    if ( (yi - pb.y)*(yi - pc.y) <= 0) {
+      xl[2] = xr[2] = pc.x + (pb.x - pc.x) * (yi - pc.y) / (pb.y - pc.y);
+    }
+    int xl_ = tools::d2i(min(xl) +0.5);
+    int xr_ = tools::d2i(max(xr) -0.5);
+    Vector3D u = B - A;
+    Vector3D v = C - A;
+    Vector3D w = Vector3D::cross(u, v);
+    double k = w.x * A.x + w.y * A.y + w.z * A.z;
+    double dzdx = - w.x /d /k;
+    double dzdy = - w.y /d /k;
+    double xg = (pa.x + pb.x + pc.x) /3;
+    double yg = (pa.y + pb.y + pc.y) /3;
+    double ozg = 1 / (3 * A.z) + 1/ (3 * B.z) + 1/ (3 * C.z); // 1/Zg
+    for (int xi = xl_; xi <= xr_; xi++) {
+      double oz = 1.0001 * ozg + (xi - xg) * dzdx + (yi - yg) * dzdy;
+      if (buffer(xi, yi) > oz){
+        image(xi, yi) = color;
+        buffer(xi, yi) = oz;
+      }
+    }
+  }
+}
+
+double figures_3d::min(std::vector<double> values) {
+  double min = values[0];
+  for (auto i : values){
+    if (min > i ){
+      min = i;
+    }
+  }
+  return min;
+}
+
+double figures_3d::max(std::vector<double> values) {
+  double max = values[0];
+  for (auto i : values){
+    if (max < i ){
+      max = i;
+    }
+  }
+  return max;
 }

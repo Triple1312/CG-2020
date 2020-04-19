@@ -32,17 +32,37 @@ namespace lines_2d {
         return std::pair<double,double>(xmin, xmax);
     }
 
+    std::tuple<double, double, double, double, double> d_dx_dy(Lines2D &lines, const int& size){
+      std::pair<double, double> minmax_x = min_max_x(lines);
+      std::pair<double, double> minmax_y = min_max_y(lines);
+
+      double biggestxy = minmax_x.second - minmax_x.first < minmax_y.second - minmax_y.first ?
+                         (minmax_y.second - minmax_y.first) : (minmax_x.second - minmax_x.first);
+
+      double imagex = (size*(minmax_x.second - minmax_x.first)/biggestxy);
+      double imagey = (size*(minmax_y.second - minmax_y.first)/biggestxy);
+
+      double scalingfactor = (.95*imagex/(minmax_x.second - minmax_x.first));
+
+      double dc_x = (scalingfactor *(minmax_x.first + minmax_x.second) / 2);
+      double dc_y = (scalingfactor *(minmax_y.first + minmax_y.second) / 2);
+
+      double dx = (imagex/2 - dc_x);
+      double dy = (imagey/2 - dc_y);
+
+      return {scalingfactor, dx, dy, imagex, imagey};
+    }
+
     std::pair<int , int> scaleLines(
             Lines2D &lines, const int& size) {
-
         std::pair<double, double> minmax_x = min_max_x(lines);
         std::pair<double, double> minmax_y = min_max_y(lines);
 
         double biggestxy = minmax_x.second - minmax_x.first < minmax_y.second - minmax_y.first ?
                           (minmax_y.second - minmax_y.first) : (minmax_x.second - minmax_x.first);
 
-        double imagex = (size*(minmax_x.second - minmax_x.first)/biggestxy);
-        double imagey = (size*(minmax_y.second - minmax_y.first)/biggestxy);
+        double imagex = tools::d2i(size*(minmax_x.second - minmax_x.first)/biggestxy);
+        double imagey = tools::d2i(size*(minmax_y.second - minmax_y.first)/biggestxy);
 
         double scalingfactor = (.95*imagex/(minmax_x.second - minmax_x.first));
 
@@ -58,7 +78,7 @@ namespace lines_2d {
             (line.p2.x *= scalingfactor); line.p2.x += dx; line.p2.x;
             (line.p2.y *= scalingfactor); line.p2.y += dy; line.p2.y;
         }
-        return std::pair<int, int>(std::round(imagex), std::round(imagey));
+        return std::pair<int, int>(tools::d2i(imagex), tools::d2i(imagey));
     }
 
     Line2D::Line2D() = default;
@@ -82,4 +102,8 @@ namespace lines_3d {
     Point3D::Point3D(std::tuple<double, double, double> coords) {
         std::tie(x, y, z) = coords;
     }
+}
+
+int tools::d2i(double d) {
+  return static_cast<int>(std::round(d));
 }

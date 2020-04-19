@@ -16,6 +16,7 @@
 #include "vector3d.h"
 #include "easy_image.h"
 #include "lines.h"
+#include "ZBuffer.h"
 
 namespace figures_3d {
 
@@ -51,8 +52,23 @@ namespace figures_3d {
 
     Figures3D Wireframe(const ini::Configuration &config);
 
+    std::vector<figures_3d::Face> triangulate(Face&);
 
+    std::vector<figures_3d::Face> triangulate(std::vector<figures_3d::Face>&);
 
+    double min(std::vector<double>);
+
+    double max(std::vector<double>);
+
+    void draw_triangle(const Vector3D &A,
+                       const Vector3D &B,
+                       const Vector3D &C,
+                       double dx,
+                       double dy,
+                       img::EasyImage &image,
+                       zbuffer::ZBuffer &buffer,
+                       img::Color &color,
+                       double d = 1);
 
 
 

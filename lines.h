@@ -61,6 +61,8 @@ namespace lines_2d {
     /// \return
     std::pair<double, double> min_max_y(const Lines2D& lines);
 
+    std::tuple<double, double, double, double, double> d_dx_dy(Lines2D &lines, const int& size);
+
     /// Function that scales all the lines to fit in the given size.
     /// \param lines
     /// \param size
@@ -95,11 +97,9 @@ namespace lines_3d{
 
     };
 
-
-
-
-
-
 }
 
+namespace tools{
+  int d2i(double);
+}
 #endif  // LINES_H_

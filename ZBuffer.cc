@@ -79,5 +79,3 @@ img::EasyImage zbuffer::ZBuffer::draw_lines( lines_2d::Lines2D &lines, const int
 double &zbuffer::ZBuffer::operator()(int width, int height) {
   return this->buffer[width][height];
 }
-
-

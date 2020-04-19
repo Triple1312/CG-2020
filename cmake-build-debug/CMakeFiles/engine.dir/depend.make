@@ -3,6 +3,7 @@
 
 CMakeFiles/engine.dir/Figures3D.cc.o: ../Figures3D.cc
 CMakeFiles/engine.dir/Figures3D.cc.o: ../Figures3D.h
+CMakeFiles/engine.dir/Figures3D.cc.o: ../ZBuffer.h
 CMakeFiles/engine.dir/Figures3D.cc.o: ../easy_image.h
 CMakeFiles/engine.dir/Figures3D.cc.o: ../ini_configuration.h
 CMakeFiles/engine.dir/Figures3D.cc.o: ../l_parser.h

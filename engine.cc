@@ -62,7 +62,7 @@ img::EasyImage generate_image(const ini::Configuration &configuration) {
         img::EasyImage image(size.first, size.second, bg);
         std::cout << lines.size() << std::endl;
         for (auto& i : lines){
-            image.draw_line((unsigned int) round(i.p1.x), (unsigned int) std::round(i.p1.y),(unsigned int)std::round(i.p2.x), (unsigned int)std::round(i.p2.y), i.color);
+            image.draw_line((unsigned int) tools::d2i(i.p1.x), (unsigned int) tools::d2i(i.p1.y),(unsigned int)tools::d2i(i.p2.x), (unsigned int)tools::d2i(i.p2.y), i.color);
         }
         return image;
     }
@@ -87,7 +87,7 @@ img::EasyImage generate_image(const ini::Configuration &configuration) {
         img::EasyImage image(size.first, size.second, bg);
 
         for (const auto& m : lines) {
-            image.draw_line( std::round(m.p1.x), std::round(m.p1.y), std::round(m.p2.x), std::round(m.p2.y), m.color );
+            image.draw_line( tools::d2i(m.p1.x), tools::d2i(m.p1.y), tools::d2i(m.p2.x), tools::d2i(m.p2.y), m.color );
             image(3, 5) = bg;
 
         }
@@ -113,6 +113,55 @@ img::EasyImage generate_image(const ini::Configuration &configuration) {
       return buffer.draw_lines(lines, size.first, size.second);
 
     }
+    else if (configuration["General"]["type"].as_string_or_die() == "ZBuffering"){
+      ini::DoubleTuple background = configuration["General"]["backgroundcolor"].as_double_tuple_or_die();
+      img::Color bg(uint8_t (background[0]*255), uint8_t (background[1]*255), uint8_t (background[2]*255));
+      figures_3d::Figures3D figs = figures_3d::Wireframe(configuration);
+      lines_2d::Lines2D lines;
+      for (auto &l : figs) {
+        for (auto n : l.project_figure()){
+          lines.push_back( n );
+        }
+      }
+      std::tuple<double, double, double, double, double> d_dx_dy_image = lines_2d::d_dx_dy(lines, configuration["General"]["size"].as_int_or_die());
+      double d, dx, dy; int imagex, imagey;
+      std::tie(d, dx, dy, imagex, imagey) = d_dx_dy_image;
+      img::EasyImage image(imagex, imagey);
+      zbuffer::ZBuffer buffer(imagex, imagey);
+
+      for(auto &l : figs ){
+        for(auto k = 0; k < l.faces.size(); k++){
+          if(l.faces[k].size() > 3){
+            for (auto j : figures_3d::triangulate(l.faces[k])) {
+              l.faces.push_back(j);
+            }
+            //assert(l.faces[k].size() < 3);
+            l.faces.erase(l.faces.begin() + k);
+            k--;
+          }
+          else{
+            figures_3d::draw_triangle(l.points[l.faces[k][0]],
+                                      l.points[l.faces[k][1]],
+                                      l.points[l.faces[k][2]],
+                                      dx,
+                                      dy,
+                                      image,
+                                      buffer,
+                                      l.color,
+                                      d);
+          }
+
+        }
+      }
+
+      //std::pair<int, int > size = l_system2d::scaleLines(lines, configuration["General"]["size"].as_int_or_die());
+
+//      img::EasyImage image(size.first, size.second, bg);
+//      zbuffer::ZBuffer buffer(size.first, size.second);
+//      return buffer.draw_lines(lines, size.first, size.second);
+      return image;
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     img::EasyImage blub;

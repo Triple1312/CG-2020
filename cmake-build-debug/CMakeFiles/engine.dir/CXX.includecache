@@ -31,6 +31,28 @@ easy_image.h
 /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/easy_image.h
 lines.h
 /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/lines.h
+ZBuffer.h
+/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/ZBuffer.h
+
+/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/ZBuffer.h
+vector
+-
+limits
+-
+iostream
+-
+cassert
+-
+utility
+-
+cmath
+-
+easy_image.h
+/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/easy_image.h
+vector3d.h
+/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/vector3d.h
+lines.h
+/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/lines.h
 
 /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/easy_image.h
 stdint.h
