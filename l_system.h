@@ -15,6 +15,11 @@
 
 #include "l_parser.h"
 #include "lines.h"
+#include "Figures3D.h"
+
+namespace L_system {
+  std::string getString(const LParser::LSystem& l_sys);
+}
 
 /// a namespace for 2d LSystems
 namespace l_system2d {

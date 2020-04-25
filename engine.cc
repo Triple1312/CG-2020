@@ -117,6 +117,8 @@ img::EasyImage generate_image(const ini::Configuration &configuration) {
       ini::DoubleTuple background = configuration["General"]["backgroundcolor"].as_double_tuple_or_die();
       img::Color bg(uint8_t (background[0]*255), uint8_t (background[1]*255), uint8_t (background[2]*255));
       figures_3d::Figures3D figs = figures_3d::Wireframe(configuration);
+
+
       lines_2d::Lines2D lines;
       for (auto &l : figs) {
         for (auto n : l.project_figure()){
@@ -130,35 +132,43 @@ img::EasyImage generate_image(const ini::Configuration &configuration) {
       zbuffer::ZBuffer buffer(imagex, imagey);
 
       for(auto &l : figs ){
-        for(auto k = 0; k < l.faces.size(); k++){
-          if(l.faces[k].size() > 3){
+        std::vector<figures_3d::Face> newfaces;
+        for(auto k = 0; k < l.faces.size(); k++) {
+          if (l.faces[k].size() > 3) {
             for (auto j : figures_3d::triangulate(l.faces[k])) {
-              l.faces.push_back(j);
+              newfaces.push_back(j);
             }
-            //assert(l.faces[k].size() < 3);
-            l.faces.erase(l.faces.begin() + k);
-            k--;
+          } else {
+            newfaces.emplace_back(l.faces[k]);
           }
-          else{
-            figures_3d::draw_triangle(l.points[l.faces[k][0]],
-                                      l.points[l.faces[k][1]],
-                                      l.points[l.faces[k][2]],
-                                      dx,
-                                      dy,
-                                      image,
-                                      buffer,
-                                      l.color,
-                                      d);
+        }
+        l.faces = newfaces;
+        if (configuration["General"]["clipping"].as_bool_or_die()) {
+          newfaces.clear();
+          l = figures_3d::clipping(l, configuration);
+          for (auto k = 0; k < l.faces.size(); k++) {
+            if (l.faces[k].size() > 3) {
+              for (auto j : figures_3d::triangulate(l.faces[k])) {
+                newfaces.push_back(j);
+              }
+            } else {
+              newfaces.emplace_back(l.faces[k]);
+            }
           }
-
+          l.faces = newfaces;
+        }
+        for (int f = 0; f < l.faces.size(); ++f) {
+          figures_3d::draw_triangle(l.points[l.faces[f][0]],
+                                    l.points[l.faces[f][1]],
+                                    l.points[l.faces[f][2]],
+                                    dx,
+                                    dy,
+                                    image,
+                                    buffer,
+                                    l.color,
+                                    d);
         }
       }
-
-      //std::pair<int, int > size = l_system2d::scaleLines(lines, configuration["General"]["size"].as_int_or_die());
-
-//      img::EasyImage image(size.first, size.second, bg);
-//      zbuffer::ZBuffer buffer(size.first, size.second);
-//      return buffer.draw_lines(lines, size.first, size.second);
       return image;
     }
 

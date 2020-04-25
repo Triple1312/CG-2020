@@ -12,11 +12,13 @@
 #include <list>
 #include <cmath>
 #include <tuple>
+#include <fstream>
 
 #include "vector3d.h"
 #include "easy_image.h"
 #include "lines.h"
 #include "ZBuffer.h"
+#include "l_system.h"
 
 namespace figures_3d {
 
@@ -50,6 +52,12 @@ namespace figures_3d {
 
     typedef std::vector<Figure> Figures3D;
 
+    figures_3d::Figure clipping(Figure figs, const ini::Configuration &conf);
+
+    figures_3d::Figure calc_fig(LParser::LSystem3D&);
+
+    figures_3d::Figures3D fractal(int ,const double&, Figure);
+
     Figures3D Wireframe(const ini::Configuration &config);
 
     std::vector<figures_3d::Face> triangulate(Face&);
@@ -73,6 +81,7 @@ namespace figures_3d {
 
 
 }
+
 
 
 

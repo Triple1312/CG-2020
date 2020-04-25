@@ -7,6 +7,7 @@ CMakeFiles/engine.dir/Figures3D.cc.o: ../ZBuffer.h
 CMakeFiles/engine.dir/Figures3D.cc.o: ../easy_image.h
 CMakeFiles/engine.dir/Figures3D.cc.o: ../ini_configuration.h
 CMakeFiles/engine.dir/Figures3D.cc.o: ../l_parser.h
+CMakeFiles/engine.dir/Figures3D.cc.o: ../l_system.h
 CMakeFiles/engine.dir/Figures3D.cc.o: ../lines.h
 CMakeFiles/engine.dir/Figures3D.cc.o: ../vector3d.h
 
@@ -37,12 +38,15 @@ CMakeFiles/engine.dir/ini_configuration.cc.o: ../ini_configuration.h
 CMakeFiles/engine.dir/l_parser.cc.o: ../l_parser.cc
 CMakeFiles/engine.dir/l_parser.cc.o: ../l_parser.h
 
+CMakeFiles/engine.dir/l_system.cc.o: ../Figures3D.h
+CMakeFiles/engine.dir/l_system.cc.o: ../ZBuffer.h
 CMakeFiles/engine.dir/l_system.cc.o: ../easy_image.h
 CMakeFiles/engine.dir/l_system.cc.o: ../ini_configuration.h
 CMakeFiles/engine.dir/l_system.cc.o: ../l_parser.h
 CMakeFiles/engine.dir/l_system.cc.o: ../l_system.cc
 CMakeFiles/engine.dir/l_system.cc.o: ../l_system.h
 CMakeFiles/engine.dir/l_system.cc.o: ../lines.h
+CMakeFiles/engine.dir/l_system.cc.o: ../vector3d.h
 
 CMakeFiles/engine.dir/lines.cc.o: ../easy_image.h
 CMakeFiles/engine.dir/lines.cc.o: ../ini_configuration.h

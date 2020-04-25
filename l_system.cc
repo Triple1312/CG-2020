@@ -3,15 +3,17 @@
 //
 
 #include "l_system.h"
+#include "Figures3D.h"
 
-namespace {
+namespace L_system {
 
     std::string getString(const LParser::LSystem& l_sys) {
         std::string string1 = l_sys.get_initiator();
         std::string string2;  // todo betere naam
         for (unsigned int i =0; i < l_sys.get_nr_iterations(); i++) {
             for (const char j : string1) {
-                if (j == '+' || j == '-' || j == '(' || j == ')') {
+                if (j == '+' || j == '-' || j == '(' || j == ')' || j == '^'
+                 || j == '&' || j == '/' || j == '\\') {
                     string2 += j;
                 } else {
                     string2 += l_sys.get_replacement(j);
@@ -23,13 +25,15 @@ namespace {
         return string1;
     }
 
+
+
 }  // namespace
 
 namespace l_system2d {
 
     Lines2D calcLSystem(
             const LParser::LSystem2D& l_system, const img::Color& linecolor) {
-        std::string full_function = getString(l_system);
+        std::string full_function = L_system::getString(l_system);
         Lines2D lines  ;
         std::stack<std::tuple<double, double, double>> stack;
         double curr_angle = l_system.get_starting_angle() * M_PI /180;
@@ -79,3 +83,5 @@ namespace l_system2d {
                 start_x + length*(cos(angle)), start_y + length*(sin(angle)));
     }
 }  // namespace l_system2d
+
+

@@ -17,6 +17,7 @@
 #include "easy_image.h"
 
 
+
 /// a namespace for functions of 2d lines
 namespace lines_2d {
 

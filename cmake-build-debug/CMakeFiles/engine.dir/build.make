@@ -135,22 +135,9 @@ CMakeFiles/engine.dir/lines.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/engine.dir/lines.cc.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/lines.cc" -o CMakeFiles/engine.dir/lines.cc.s
 
-CMakeFiles/engine.dir/l_system.cc.o: CMakeFiles/engine.dir/flags.make
-CMakeFiles/engine.dir/l_system.cc.o: ../l_system.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/engine.dir/l_system.cc.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/engine.dir/l_system.cc.o -c "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/l_system.cc"
-
-CMakeFiles/engine.dir/l_system.cc.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/engine.dir/l_system.cc.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/l_system.cc" > CMakeFiles/engine.dir/l_system.cc.i
-
-CMakeFiles/engine.dir/l_system.cc.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/engine.dir/l_system.cc.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/l_system.cc" -o CMakeFiles/engine.dir/l_system.cc.s
-
 CMakeFiles/engine.dir/Figures3D.cc.o: CMakeFiles/engine.dir/flags.make
 CMakeFiles/engine.dir/Figures3D.cc.o: ../Figures3D.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/engine.dir/Figures3D.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/engine.dir/Figures3D.cc.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/engine.dir/Figures3D.cc.o -c "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Figures3D.cc"
 
 CMakeFiles/engine.dir/Figures3D.cc.i: cmake_force
@@ -160,6 +147,19 @@ CMakeFiles/engine.dir/Figures3D.cc.i: cmake_force
 CMakeFiles/engine.dir/Figures3D.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/engine.dir/Figures3D.cc.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Figures3D.cc" -o CMakeFiles/engine.dir/Figures3D.cc.s
+
+CMakeFiles/engine.dir/l_system.cc.o: CMakeFiles/engine.dir/flags.make
+CMakeFiles/engine.dir/l_system.cc.o: ../l_system.cc
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/engine.dir/l_system.cc.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/engine.dir/l_system.cc.o -c "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/l_system.cc"
+
+CMakeFiles/engine.dir/l_system.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/engine.dir/l_system.cc.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/l_system.cc" > CMakeFiles/engine.dir/l_system.cc.i
+
+CMakeFiles/engine.dir/l_system.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/engine.dir/l_system.cc.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/l_system.cc" -o CMakeFiles/engine.dir/l_system.cc.s
 
 CMakeFiles/engine.dir/ZBuffer.cc.o: CMakeFiles/engine.dir/flags.make
 CMakeFiles/engine.dir/ZBuffer.cc.o: ../ZBuffer.cc
@@ -182,8 +182,8 @@ engine_OBJECTS = \
 "CMakeFiles/engine.dir/l_parser.cc.o" \
 "CMakeFiles/engine.dir/vector3d.cc.o" \
 "CMakeFiles/engine.dir/lines.cc.o" \
-"CMakeFiles/engine.dir/l_system.cc.o" \
 "CMakeFiles/engine.dir/Figures3D.cc.o" \
+"CMakeFiles/engine.dir/l_system.cc.o" \
 "CMakeFiles/engine.dir/ZBuffer.cc.o"
 
 # External object files for target engine
@@ -195,8 +195,8 @@ engine: CMakeFiles/engine.dir/ini_configuration.cc.o
 engine: CMakeFiles/engine.dir/l_parser.cc.o
 engine: CMakeFiles/engine.dir/vector3d.cc.o
 engine: CMakeFiles/engine.dir/lines.cc.o
-engine: CMakeFiles/engine.dir/l_system.cc.o
 engine: CMakeFiles/engine.dir/Figures3D.cc.o
+engine: CMakeFiles/engine.dir/l_system.cc.o
 engine: CMakeFiles/engine.dir/ZBuffer.cc.o
 engine: CMakeFiles/engine.dir/build.make
 engine: CMakeFiles/engine.dir/link.txt
