@@ -334,35 +334,18 @@ namespace {
         return eye_matrix;
     }
 
+    inline Matrix eye_clip_matrix(const double &theta, const double &phi, Vector3D &eye){
+      return Matrix(getMatrix_translate(-eye) * getMatrix_rotate_z(-(theta + M_PI / 2)) * getMatrix_rotate_x(- phi));
+    }
+
 
 }
-
-//figures_3d::Figures3D generate_fractals(figures_3d::Figure &fig, figures_3d::Figures3D &fracs, int& nrIt, const double scale){
-//  Matrix scaler = getMatrix_scale(1 / std::pow(scale, nrIt));
-//    for (auto j : fig.points) {
-//      Vector3D Pai = j * scaler ;
-//      Matrix Mt = getMatrix_translate((j - Pai));
-//      figures_3d::Figure new_cube = cube();
-//      for (auto &l : new_cube.points){
-//        l *= scaler;
-//        l *= Mt;
-//      }
-//      fracs.push_back(new_cube);
-//    }
-//     if (nrIt != 0) {
-//       figures_3d::Figures3D temps;
-//       for ( auto &p : fracs) {
-//         //figures_3d::Figures3D idk;
-//         temps += generate_fractals(p, )
-//       }
-//     }
-//
-//}
 
 figures_3d::Figures3D figures_3d::fractal(int nrIt, const double& scale, Figure fig = cube()) {
 
   figures_3d::Figures3D temps;
   Matrix scaler = getMatrix_scale(1 / scale);
+  if (nrIt == 0) {return {fig};}
     for (auto j : fig.points) {
       Vector3D Pai = j * scaler;
       Matrix Mt = getMatrix_translate(j - Pai);
@@ -387,10 +370,6 @@ figures_3d::Figures3D figures_3d::fractal(int nrIt, const double& scale, Figure 
     }
     return temps;
 }
-
-//    inline lines_2d::Point2D point3D_to_2D(const Vector3D &point){
-//        return lines_2d::Point2D(std::)
-//    }
 
 figures_3d::Figure figures_3d::calc_fig(LParser::LSystem3D & l_sys) {
   figures_3d::Figure fig;
@@ -522,27 +501,38 @@ void figures_3d::Figure::to_eye( const double &theta, const double &phi, const d
     }
 }
 
+void figures_3d::Figure::to_eye_clip(const double &theta, const double &phi, Vector3D &eye) {
+  for (auto &i :this->points) {
+    i *= eye_clip_matrix(theta, phi, eye );
+  }
+}
+
+
 
 figures_3d::Figures3D figures_3d::Wireframe(const ini::Configuration &configuration) {
     figures_3d::Figures3D figs;
     int blub = configuration["General"]["nrFigures"].as_int_or_die();
 
     ini::DoubleTuple eye = configuration["General"]["eye"].as_double_tuple_or_die();
+
     for (auto i = 0; i < configuration["General"]["nrFigures"].as_int_or_die(); i++){
       if (configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "FractalCube" ||
-          configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "FractalCube" ||
+          configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "FractalDodecahedron" ||
           configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "FractalTetrahedron" ||
           configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "FractalIcosahedron") {
         int nrIt = configuration["Figure" + std::to_string(i)]["nrIterations"].as_int_or_die();
         figures_3d::Figures3D temp_figs;
         if (configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "FractalCube") {
-          temp_figs = fractal(nrIt,configuration["Figure"+ std::to_string(i)]["fractalScale"].as_int_or_die(), cube());
+          temp_figs = fractal(nrIt,configuration["Figure"+ std::to_string(i)]["fractalScale"].as_double_or_die(), cube());
         }
         else if (configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() =="FractalTetrahedron"){
-          temp_figs = fractal(nrIt,configuration["Figure"+ std::to_string(i)]["fractalScale"].as_int_or_die(), tetrahedron());
+          temp_figs = fractal(nrIt,configuration["Figure"+ std::to_string(i)]["fractalScale"].as_double_or_die(), tetrahedron());
         }
         else if (configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "FractalIcosahedron"){
-          temp_figs = fractal(nrIt,configuration["Figure"+ std::to_string(i)]["fractalScale"].as_int_or_die(), icosahedron());
+          temp_figs = fractal(nrIt,configuration["Figure"+ std::to_string(i)]["fractalScale"].as_double_or_die(), icosahedron());
+        }
+        else if (configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "FractalDodecahedron"){
+          temp_figs = fractal(nrIt,configuration["Figure"+ std::to_string(i)]["fractalScale"].as_double_or_die(), dodecahedron());
         }
         for (auto k : temp_figs) {
           ini::DoubleTuple fig_color = configuration["Figure" + std::to_string(i)]["color"].as_double_tuple_or_die();
@@ -556,7 +546,10 @@ figures_3d::Figures3D figures_3d::Wireframe(const ini::Configuration &configurat
           k.rotateY(M_PI / 180 * configuration["Figure" + std::to_string(i)]["rotateY"].as_double_or_die());
           k.rotateZ(M_PI / 180 * configuration["Figure" + std::to_string(i)]["rotateZ"].as_double_or_die());
           k.translate(center[0], center[1], center[2]);
-          k.to_eye(std::atan2(eye[1], eye[0]), std::acos(eye[2] / r), r);
+          if (!configuration["General"]["clipping"].as_bool_or_default(false)) {
+            k.to_eye(std::atan2(eye[1], eye[0]), std::acos(eye[2] / r), r);
+          }
+          //k.to_eye(std::atan2(eye[1], eye[0]), std::acos(eye[2] / r), r);
           figs.push_back(k);
         }
       }
@@ -620,7 +613,10 @@ figures_3d::Figures3D figures_3d::Wireframe(const ini::Configuration &configurat
         figure.rotateY(M_PI / 180 * configuration["Figure" + std::to_string(i)]["rotateY"].as_double_or_die());
         figure.rotateZ(M_PI / 180 * configuration["Figure" + std::to_string(i)]["rotateZ"].as_double_or_die());
         figure.translate(center[0], center[1], center[2]);
-        figure.to_eye(std::atan2(eye[1], eye[0]), std::acos(eye[2] / r), r);
+        if (!configuration["General"]["clipping"].as_bool_or_default(false)) {
+          figure.to_eye(std::atan2(eye[1], eye[0]), std::acos(eye[2] / r), r);
+        }
+
         figs.push_back(figure);
       }
     }
@@ -734,7 +730,7 @@ figures_3d::Figure figures_3d::clipping(Figure fig, const ini::Configuration &co
   double top = right/ ratio;
   ini::DoubleTuple dir = conf["General"]["viewDirection"].as_double_tuple_or_die();
 
-
+  fig.faces = triangulate(fig.faces);
   //todo near clipping
   
   for (auto j = 0; j < fig.faces.size(); j++) {
@@ -742,7 +738,7 @@ figures_3d::Figure figures_3d::clipping(Figure fig, const ini::Configuration &co
     std::vector<int> out;
     //
     for (auto &k : fig.faces[j]) {
-      if (fig.points[k].z <= -near * 1.002) {
+      if (fig.points[k].z <= - near ) {
         in.emplace_back(k);
       } else {
         out.emplace_back(k);
@@ -753,38 +749,36 @@ figures_3d::Figure figures_3d::clipping(Figure fig, const ini::Configuration &co
       fig.faces.erase(fig.faces.begin() + j);
       j--;
     } else if (in.size() == 2) {
-      double p1 = (near - fig.points[out[0]].z) / (fig.points[in[0]].z - fig.points[out[0]].z);
-      double p2 = (near - fig.points[out[0]].z) / (fig.points[in[1]].z - fig.points[out[0]].z);
+      auto & A = fig.points[out[0]];
+      auto & B = fig.points[in[0]];
+      auto & C = fig.points[in[1]];
 
-      fig.points.emplace_back(Vector3D::point((p1 * fig.points[in[0]].x) + (1 - p1) * fig.points[out[0]].x,
-                                              (p1 * fig.points[in[0]].y) + (1 - p1) * fig.points[out[0]].y,
-                                              (p1 * fig.points[in[0]].z) + (1 - p1) * fig.points[out[0]].z));
+      double p1 = (-near - B.z) / (A.z - B.z);
+      double p2 = (-near - C.z) / (A.z - C.z);
 
-      fig.points.emplace_back(Vector3D::point((p2 * fig.points[in[1]].x) + (1 - p2) * fig.points[out[0]].x,
-                                              (p2 * fig.points[in[1]].y) + (1 - p2) * fig.points[out[0]].y,
-                                              (p2 * fig.points[in[1]].z) + (1 - p2) * fig.points[out[0]].z));
+      fig.points.emplace_back(Vector3D::point(p1 * A + (1-p1) * B));
+      fig.points.emplace_back(Vector3D::point(p2 * A + (1-p2) * C));
 
-      fig.faces.emplace_back(Face{in[0], (int) (fig.points.size() - 1), (int) (fig.points.size() - 2), in[1]});
+      fig.faces.emplace_back(Face{in[0], (int) (fig.points.size() - 2), (int) (fig.points.size() - 1), in[1]});
       fig.faces.erase(fig.faces.begin() + j);
       j--;
 
     } else if (in.size() == 1) {
-      double p1 = (near - fig.points[in[0]].z) / (fig.points[out[0]].z - fig.points[in[0]].z);
-      double p2 = (near - fig.points[in[0]].z) / (fig.points[out[1]].z - fig.points[in[0]].z);
 
-      fig.points.emplace_back(Vector3D::point((p1 * fig.points[out[0]].x) + (1 - p1) * fig.points[in[0]].x,
-                                              (p1 * fig.points[out[0]].y) + (1 - p1) * fig.points[in[0]].y,
-                                              (p1 * fig.points[out[0]].z) + (1 - p1) * fig.points[in[0]].z));
+      auto & A = fig.points[in[0]];
+      auto & B = fig.points[out[0]];
+      auto & C = fig.points[out[1]];
 
-      fig.points.emplace_back(Vector3D::point((p2 * fig.points[out[1]].x) + (1 - p2) * fig.points[in[0]].x,
-                                              (p2 * fig.points[out[1]].y) + (1 - p2) * fig.points[in[0]].y,
-                                              (p2 * fig.points[out[1]].z) + (1 - p2) * fig.points[in[0]].z));
+      double p1 = (-near - B.z) / (A.z - B.z);
+      double p2 = (-near - C.z) / (A.z - C.z);
+
+      fig.points.emplace_back(Vector3D::point(p1 * A + (1-p1) * B));
+      fig.points.emplace_back(Vector3D::point(p2 * A + (1-p2) * C));
 
       fig.faces.emplace_back(Face{in[0], (int) (fig.points.size() - 1), (int) (fig.points.size() - 2)});
       fig.faces.erase(fig.faces.begin() + j);
       j--;
-    } else { // doe niks
-
+    } else { //doe niks
     }
   }
     fig.faces = triangulate(fig.faces);
@@ -795,7 +789,7 @@ figures_3d::Figure figures_3d::clipping(Figure fig, const ini::Configuration &co
       std::vector<int> out;
       //
       for (auto &k : fig.faces[j]) {
-        if (fig.points[k].z >= - far * 1.002) {
+        if (fig.points[k].z >= - far ) {
           in.emplace_back(k);
         } else {
           out.emplace_back(k);
@@ -806,38 +800,36 @@ figures_3d::Figure figures_3d::clipping(Figure fig, const ini::Configuration &co
         fig.faces.erase(fig.faces.begin() + j);
         j--;
       } else if (in.size() == 2) {
-        double p1 = (far - fig.points[out[0]].z) / (fig.points[in[0]].z - fig.points[out[0]].z);
-        double p2 = (far - fig.points[out[0]].z) / (fig.points[in[1]].z - fig.points[out[0]].z);
+        auto & A = fig.points[out[0]];
+        auto & B = fig.points[in[0]];
+        auto & C = fig.points[in[1]];
 
-        fig.points.emplace_back(Vector3D::point((p1 * fig.points[in[0]].x) + (1 - p1) * fig.points[out[0]].x,
-                                              (p1 * fig.points[in[0]].y) + (1 - p1) * fig.points[out[0]].y,
-                                              (p1 * fig.points[in[0]].z) + (1 - p1) * fig.points[out[0]].z));
+        double p1 = (far - B.z) / (A.z - B.z);
+        double p2 = (far - C.z) / (A.z - C.z);
 
-        fig.points.emplace_back(Vector3D::point((p2 * fig.points[in[1]].x) + (1 - p2) * fig.points[out[0]].x,
-                                              (p2 * fig.points[in[1]].y) + (1 - p2) * fig.points[out[0]].y,
-                                              (p2 * fig.points[in[1]].z) + (1 - p2) * fig.points[out[0]].z));
+        fig.points.emplace_back(Vector3D::point(p1 * A + (1-p1) * B));
+        fig.points.emplace_back(Vector3D::point(p2 * A + (1-p2) * C));
 
-        fig.faces.emplace_back(Face{in[0], (int) (fig.points.size() - 1), (int) (fig.points.size() - 2), in[1]});
+        fig.faces.emplace_back(Face{in[0], (int) (fig.points.size() - 2), (int) (fig.points.size() - 1), in[1]});
         fig.faces.erase(fig.faces.begin() + j);
         j--;
 
       } else if (in.size() == 1) {
-        double p1 = (far - fig.points[in[0]].z) / (fig.points[out[0]].z - fig.points[in[0]].z);
-        double p2 = (far - fig.points[in[0]].z) / (fig.points[out[1]].z - fig.points[in[0]].z);
 
-        fig.points.emplace_back(Vector3D::point((p1 * fig.points[out[0]].x) + (1 - p1) * fig.points[in[0]].x,
-                                              (p1 * fig.points[out[0]].y) + (1 - p1) * fig.points[in[0]].y,
-                                              (p1 * fig.points[out[0]].z) + (1 - p1) * fig.points[in[0]].z));
+        auto & A = fig.points[in[0]];
+        auto & B = fig.points[out[0]];
+        auto & C = fig.points[out[1]];
 
-        fig.points.emplace_back(Vector3D::point((p2 * fig.points[out[1]].x) + (1 - p2) * fig.points[in[0]].x,
-                                              (p2 * fig.points[out[1]].y) + (1 - p2) * fig.points[in[0]].y,
-                                              (p2 * fig.points[out[1]].z) + (1 - p2) * fig.points[in[0]].z));
+        double p1 = (far - B.z) / (A.z - B.z);
+        double p2 = (far - C.z) / (A.z - C.z);
+
+        fig.points.emplace_back(Vector3D::point(p1 * A + (1-p1) * B));
+        fig.points.emplace_back(Vector3D::point(p2 * A + (1-p2) * C));
 
         fig.faces.emplace_back(Face{in[0], (int) (fig.points.size() - 1), (int) (fig.points.size() - 2)});
         fig.faces.erase(fig.faces.begin() + j);
         j--;
       } else { //doe niks
-
       }
     }
     fig.faces = triangulate(fig.faces);
@@ -863,7 +855,7 @@ figures_3d::Figure figures_3d::clipping(Figure fig, const ini::Configuration &co
       std::vector<int> out;
       //
       for (auto &k : fig.faces[j]) {
-        if (fig.points[k].x <= right * 1.002) {
+        if (fig.points[k].x * near / -fig.points[k].z <= right * 1.002) {
           in.emplace_back(k);
         } else {
           out.emplace_back(k);
@@ -874,8 +866,7 @@ figures_3d::Figure figures_3d::clipping(Figure fig, const ini::Configuration &co
         fig.faces.erase(fig.faces.begin() + j);
         j--;
       } else if (in.size() == 2) {
-        ///double p1 = (right - fig.points[out[0]].x) / (fig.points[in[0]].x - fig.points[out[0]].x);
-        ///double p2 = (right - fig.points[out[0]].x) / (fig.points[in[1]].x - fig.points[out[0]].x);
+        
         auto & A = fig.points[out[0]];
         auto & B = fig.points[in[0]];
         auto & C = fig.points[in[1]];
@@ -883,52 +874,29 @@ figures_3d::Figure figures_3d::clipping(Figure fig, const ini::Configuration &co
         double p1 = (B.x * near + B.z * right) / ((B.x - A.x) * near + (B.z - A.z) * right);
         double p2 = (C.x * near + C.z * right) / ((C.x - A.x) * near + (C.z - A.z) * right);
 
-        Vector3D AB = Vector3D::point(p1 * A + (1-p1) * B);
-        Vector3D AC = Vector3D::point(p2 * A + (1-p2) * C);
+        fig.points.emplace_back(Vector3D::point(p1 * A + (1-p1) * B));
+        fig.points.emplace_back(Vector3D::point(p2 * A + (1-p2) * C));
 
-        
-//        double p1 = (fig.points[in[0]].x * near + fig.points[in[0]].z * right)/
-//                    ((fig.points[in[0]].x - fig.points[out[0]].x) * near + (fig.points[in[0]].z - fig.points[out[0]].z) * right);
-//        double p2 = (fig.points[in[1]].x * near + fig.points[in[1]].z * right)/
-//                    ((fig.points[in[1]].x - fig.points[out[0]].x) * near + (fig.points[in[1]].z - fig.points[out[1]].z) * right);
-        
-        //Vector3D A = fig.points[in[0]] * near + fig.points[in[0]] * right;
-        
-        //fig.points.emplace_back(())
-
-        fig.points.emplace_back(Vector3D::point((p1 * fig.points[in[0]].x) + (1 - p1) * fig.points[out[0]].x,
-                                                (p1 * fig.points[in[0]].y) + (1 - p1) * fig.points[out[0]].y,
-                                                (p1 * fig.points[in[0]].z) + (1 - p1) * fig.points[out[0]].z));
-
-        fig.points.emplace_back(Vector3D::point((p2 * fig.points[in[1]].x) + (1 - p2) * fig.points[out[0]].x,
-                                                (p2 * fig.points[in[1]].y) + (1 - p2) * fig.points[out[0]].y,
-                                                (p2 * fig.points[in[1]].z) + (1 - p2) * fig.points[out[0]].z));
-
-        fig.faces.emplace_back(Face{in[0], (int) (fig.points.size() - 1), (int) (fig.points.size() - 2), in[1]});
+        fig.faces.emplace_back(Face{in[0], (int) (fig.points.size() - 2), (int) (fig.points.size() - 1), in[1]});
         fig.faces.erase(fig.faces.begin() + j);
         j--;
 
       } else if (in.size() == 1) {
-        ///double p1 = (right - fig.points[in[0]].x) / (fig.points[out[0]].x - fig.points[in[0]].x);
-        ///double p2 = (right - fig.points[in[0]].x) / (fig.points[out[1]].x - fig.points[in[0]].x);
-        double p1 = (fig.points[in[0]].x * near + fig.points[in[0]].z * right)/
-            ((fig.points[in[0]].x - fig.points[out[0]].x) * near + (fig.points[in[0]].z - fig.points[out[0]].z) * right);
-        double p2 = (fig.points[in[1]].x * near + fig.points[in[1]].z * right)/
-            ((fig.points[in[1]].x - fig.points[out[0]].x) * near + (fig.points[in[1]].z - fig.points[out[1]].z) * right);
+        
+        auto & A = fig.points[in[0]];
+        auto & B = fig.points[out[0]];
+        auto & C = fig.points[out[1]];
 
-        fig.points.emplace_back(Vector3D::point((p1 * fig.points[out[0]].x) + (1 - p1) * fig.points[in[0]].x,
-                                                (p1 * fig.points[out[0]].y) + (1 - p1) * fig.points[in[0]].y,
-                                                (p1 * fig.points[out[0]].z) + (1 - p1) * fig.points[in[0]].z));
+        double p1 = (B.x * near + B.z * right) / ((B.x - A.x) * near + (B.z - A.z) * right);
+        double p2 = (C.x * near + C.z * right) / ((C.x - A.x) * near + (C.z - A.z) * right);
 
-        fig.points.emplace_back(Vector3D::point((p2 * fig.points[out[1]].x) + (1 - p2) * fig.points[in[0]].x,
-                                                (p2 * fig.points[out[1]].y) + (1 - p2) * fig.points[in[0]].y,
-                                                (p2 * fig.points[out[1]].z) + (1 - p2) * fig.points[in[0]].z));
+        fig.points.emplace_back(Vector3D::point(p1 * A + (1-p1) * B));
+        fig.points.emplace_back(Vector3D::point(p2 * A + (1-p2) * C));
 
         fig.faces.emplace_back(Face{in[0], (int) (fig.points.size() - 1), (int) (fig.points.size() - 2)});
         fig.faces.erase(fig.faces.begin() + j);
         j--;
       } else { // niks doen
-
       }
     }
     fig.faces = triangulate(fig.faces);
@@ -939,7 +907,7 @@ figures_3d::Figure figures_3d::clipping(Figure fig, const ini::Configuration &co
       std::vector<int> out;
       //
       for (auto &k : fig.faces[j]) {
-        if (fig.points[k].x >= -right * 1.002) {
+        if (fig.points[k].x * near / -fig.points[k].z >= -right * 1.002) {
           in.emplace_back(k);
         } else {
           out.emplace_back(k);
@@ -950,45 +918,41 @@ figures_3d::Figure figures_3d::clipping(Figure fig, const ini::Configuration &co
         fig.faces.erase(fig.faces.begin() + j);
         j--;
       } else if (in.size() == 2) {
-        double p1 = (-right - fig.points[out[0]].x) / (fig.points[in[0]].x - fig.points[out[0]].x);
-        double p2 = (-right - fig.points[out[0]].x) / (fig.points[in[1]].x - fig.points[out[0]].x);
-//        double p1 = (fig.points[in[0]].x * near + fig.points[in[0]].z * right)/
-//                    ((fig.points[in[0]].x - fig.points[out[0]].x) * near + (fig.points[in[0]].z - fig.points[out[0]].z) * right);
-//        double p2 = (fig.points[in[1]].x * near + fig.points[in[1]].z * right)/
-//                    ((fig.points[in[1]].x - fig.points[out[0]].x) * near + (fig.points[in[1]].z - fig.points[out[1]].z) * right);
 
-        fig.points.emplace_back(Vector3D::point((p1 * fig.points[in[0]].x) + (1 - p1) * fig.points[out[0]].x,
-                                                (p1 * fig.points[in[0]].y) + (1 - p1) * fig.points[out[0]].y,
-                                                (p1 * fig.points[in[0]].z) + (1 - p1) * fig.points[out[0]].z));
+        auto & A = fig.points[out[0]];
+        auto & B = fig.points[in[0]];
+        auto & C = fig.points[in[1]];
 
-        fig.points.emplace_back(Vector3D::point((p2 * fig.points[in[1]].x) + (1 - p2) * fig.points[out[0]].x,
-                                                (p2 * fig.points[in[1]].y) + (1 - p2) * fig.points[out[0]].y,
-                                                (p2 * fig.points[in[1]].z) + (1 - p2) * fig.points[out[0]].z));
+        double p1 = (B.x * near + B.z * -right) / ((B.x - A.x) * near + (B.z - A.z) * -right);
+        double p2 = (C.x * near + C.z * -right) / ((C.x - A.x) * near + (C.z - A.z) * -right);
 
-        fig.faces.emplace_back(Face{in[0], (int) (fig.points.size() - 1), (int) (fig.points.size() - 2), in[1]});
+        fig.points.emplace_back(Vector3D::point(p1 * A + (1-p1) * B));
+        fig.points.emplace_back(Vector3D::point(p2 * A + (1-p2) * C));
+
+        fig.faces.emplace_back(Face{in[0], (int) (fig.points.size() - 2), (int) (fig.points.size() - 1), in[1]});
         fig.faces.erase(fig.faces.begin() + j);
         j--;
 
       } else if (in.size() == 1) {
-        double p1 = (-right - fig.points[in[0]].x) / (fig.points[out[0]].x - fig.points[in[0]].x);
-        double p2 = (-right - fig.points[in[0]].x) / (fig.points[out[1]].x - fig.points[in[0]].x);
 
-        fig.points.emplace_back(Vector3D::point((p1 * fig.points[out[0]].x) + (1 - p1) * fig.points[in[0]].x,
-                                                (p1 * fig.points[out[0]].y) + (1 - p1) * fig.points[in[0]].y,
-                                                (p1 * fig.points[out[0]].z) + (1 - p1) * fig.points[in[0]].z));
+        auto & A = fig.points[in[0]];
+        auto & B = fig.points[out[0]];
+        auto & C = fig.points[out[1]];
 
-        fig.points.emplace_back(Vector3D::point((p2 * fig.points[out[1]].x) + (1 - p2) * fig.points[in[0]].x,
-                                                (p2 * fig.points[out[1]].y) + (1 - p2) * fig.points[in[0]].y,
-                                                (p2 * fig.points[out[1]].z) + (1 - p2) * fig.points[in[0]].z));
+        double p1 = (B.x * near + B.z * -right) / ((B.x - A.x) * near + (B.z - A.z) * -right);
+        double p2 = (C.x * near + C.z * -right) / ((C.x - A.x) * near + (C.z - A.z) * -right);
+
+        fig.points.emplace_back(Vector3D::point(p1 * A + (1-p1) * B));
+        fig.points.emplace_back(Vector3D::point(p2 * A + (1-p2) * C));
 
         fig.faces.emplace_back(Face{in[0], (int) (fig.points.size() - 1), (int) (fig.points.size() - 2)});
         fig.faces.erase(fig.faces.begin() + j);
         j--;
       } else { // niks doen
-
       }
     }
     fig.faces = triangulate(fig.faces);
+
 
     //todo  top clipping
     for (auto j = 0; j < fig.faces.size(); j++) {
@@ -996,7 +960,7 @@ figures_3d::Figure figures_3d::clipping(Figure fig, const ini::Configuration &co
       std::vector<int> out;
       //
       for (auto &k : fig.faces[j]) {
-        if (fig.points[k].y <= top * 1.002) {
+        if (fig.points[k].y * near / -fig.points[k].z <= top * 1.002 ) {
           in.emplace_back(k);
         } else {
           out.emplace_back(k);
@@ -1007,42 +971,37 @@ figures_3d::Figure figures_3d::clipping(Figure fig, const ini::Configuration &co
         fig.faces.erase(fig.faces.begin() + j);
         j--;
       } else if (in.size() == 2) {
-        double p1 = (top - fig.points[out[0]].y) / (fig.points[in[0]].y - fig.points[out[0]].y);
-        double p2 = (top - fig.points[out[0]].y) / (fig.points[in[1]].y - fig.points[out[0]].y);
-//        double p1 = (fig.points[in[0]].x * near + fig.points[in[0]].z * right)/
-//                    ((fig.points[in[0]].x - fig.points[out[0]].x) * near + (fig.points[in[0]].z - fig.points[out[0]].z) * right);
-//        double p2 = (fig.points[in[1]].x * near + fig.points[in[1]].z * right)/
-//                    ((fig.points[in[1]].x - fig.points[out[0]].x) * near + (fig.points[in[1]].z - fig.points[out[1]].z) * right);
 
-        fig.points.emplace_back(Vector3D::point((p1 * fig.points[in[0]].x) + (1 - p1) * fig.points[out[0]].x,
-                                                (p1 * fig.points[in[0]].y) + (1 - p1) * fig.points[out[0]].y,
-                                                (p1 * fig.points[in[0]].z) + (1 - p1) * fig.points[out[0]].z));
+        auto & A = fig.points[out[0]];
+        auto & B = fig.points[in[0]];
+        auto & C = fig.points[in[1]];
 
-        fig.points.emplace_back(Vector3D::point((p2 * fig.points[in[1]].x) + (1 - p2) * fig.points[out[0]].x,
-                                                (p2 * fig.points[in[1]].y) + (1 - p2) * fig.points[out[0]].y,
-                                                (p2 * fig.points[in[1]].z) + (1 - p2) * fig.points[out[0]].z));
+        double p1 = (B.y * near + B.z * top) / ((B.y - A.y) * near + (B.z - A.z) * top);
+        double p2 = (C.y * near + C.z * top) / ((C.y - A.y) * near + (C.z - A.z) * top);
 
-        fig.faces.emplace_back(Face{in[0], (int) (fig.points.size() - 1), (int) (fig.points.size() - 2), in[1]});
+        fig.points.emplace_back(Vector3D::point(p1 * A + (1-p1) * B));
+        fig.points.emplace_back(Vector3D::point(p2 * A + (1-p2) * C));
+
+        fig.faces.emplace_back(Face{in[0], (int) (fig.points.size() - 2), (int) (fig.points.size() - 1), in[1]});
         fig.faces.erase(fig.faces.begin() + j);
         j--;
 
       } else if (in.size() == 1) {
-        double p1 = (top - fig.points[in[0]].y) / (fig.points[out[0]].y - fig.points[in[0]].y);
-        double p2 = (top - fig.points[in[0]].y) / (fig.points[out[1]].y - fig.points[in[0]].y);
 
-        fig.points.emplace_back(Vector3D::point((p1 * fig.points[out[0]].x) + (1 - p1) * fig.points[in[0]].x,
-                                                (p1 * fig.points[out[0]].y) + (1 - p1) * fig.points[in[0]].y,
-                                                (p1 * fig.points[out[0]].z) + (1 - p1) * fig.points[in[0]].z));
+        auto & A = fig.points[in[0]];
+        auto & B = fig.points[out[0]];
+        auto & C = fig.points[out[1]];
 
-        fig.points.emplace_back(Vector3D::point((p2 * fig.points[out[1]].x) + (1 - p2) * fig.points[in[0]].x,
-                                                (p2 * fig.points[out[1]].y) + (1 - p2) * fig.points[in[0]].y,
-                                                (p2 * fig.points[out[1]].z) + (1 - p2) * fig.points[in[0]].z));
+        double p1 = (B.y * near + B.z * top) / ((B.y - A.y) * near + (B.z - A.z) * top);
+        double p2 = (C.y * near + C.z * top) / ((C.y - A.y) * near + (C.z - A.z) * top);
+
+        fig.points.emplace_back(Vector3D::point(p1 * A + (1-p1) * B));
+        fig.points.emplace_back(Vector3D::point(p2 * A + (1-p2) * C));
 
         fig.faces.emplace_back(Face{in[0], (int) (fig.points.size() - 1), (int) (fig.points.size() - 2)});
         fig.faces.erase(fig.faces.begin() + j);
         j--;
       } else { // niks doen
-
       }
     }
     fig.faces = triangulate(fig.faces);
@@ -1054,7 +1013,7 @@ figures_3d::Figure figures_3d::clipping(Figure fig, const ini::Configuration &co
       std::vector<int> out;
       //
       for (auto &k : fig.faces[j]) {
-        if (fig.points[k].y >= - top * 1.002) {
+        if (fig.points[k].y * near / -fig.points[k].z >= - top * 1.002 ) {
           in.emplace_back(k);
         } else {
           out.emplace_back(k);
@@ -1065,57 +1024,52 @@ figures_3d::Figure figures_3d::clipping(Figure fig, const ini::Configuration &co
         fig.faces.erase(fig.faces.begin() + j);
         j--;
       } else if (in.size() == 2) {
-        double p1 = (-top - fig.points[out[0]].y) / (fig.points[in[0]].y - fig.points[out[0]].y);
-        double p2 = (-top - fig.points[out[0]].y) / (fig.points[in[1]].y - fig.points[out[0]].y);
-//        double p1 = (fig.points[in[0]].x * near + fig.points[in[0]].z * right)/
-//                    ((fig.points[in[0]].x - fig.points[out[0]].x) * near + (fig.points[in[0]].z - fig.points[out[0]].z) * right);
-//        double p2 = (fig.points[in[1]].x * near + fig.points[in[1]].z * right)/
-//                    ((fig.points[in[1]].x - fig.points[out[0]].x) * near + (fig.points[in[1]].z - fig.points[out[1]].z) * right);
 
-        fig.points.emplace_back(Vector3D::point((p1 * fig.points[in[0]].x) + (1 - p1) * fig.points[out[0]].x,
-                                                (p1 * fig.points[in[0]].y) + (1 - p1) * fig.points[out[0]].y,
-                                                (p1 * fig.points[in[0]].z) + (1 - p1) * fig.points[out[0]].z));
+        auto & A = fig.points[out[0]];
+        auto & B = fig.points[in[0]];
+        auto & C = fig.points[in[1]];
 
-        fig.points.emplace_back(Vector3D::point((p2 * fig.points[in[1]].x) + (1 - p2) * fig.points[out[0]].x,
-                                                (p2 * fig.points[in[1]].y) + (1 - p2) * fig.points[out[0]].y,
-                                                (p2 * fig.points[in[1]].z) + (1 - p2) * fig.points[out[0]].z));
+        double p1 = (B.y * near + B.z * -top) / ((B.y - A.y) * near + (B.z - A.z) * -top);
+        double p2 = (C.y * near + C.z * -top) / ((C.y - A.y) * near + (C.z - A.z) * -top);
 
-        fig.faces.emplace_back(Face{in[0], (int) (fig.points.size() - 1), (int) (fig.points.size() - 2), in[1]});
+        fig.points.emplace_back(Vector3D::point(p1 * A + (1-p1) * B));
+        fig.points.emplace_back(Vector3D::point(p2 * A + (1-p2) * C));
+
+        fig.faces.emplace_back(Face{in[0], (int) (fig.points.size() - 2), (int) (fig.points.size() - 1), in[1]});
         fig.faces.erase(fig.faces.begin() + j);
         j--;
 
       } else if (in.size() == 1) {
-        double p1 = (-top - fig.points[in[0]].y) / (fig.points[out[0]].y - fig.points[in[0]].y);
-        double p2 = (-top - fig.points[in[0]].y) / (fig.points[out[1]].y - fig.points[in[0]].y);
 
-        fig.points.emplace_back(Vector3D::point((p1 * fig.points[out[0]].x) + (1 - p1) * fig.points[in[0]].x,
-                                                (p1 * fig.points[out[0]].y) + (1 - p1) * fig.points[in[0]].y,
-                                                (p1 * fig.points[out[0]].z) + (1 - p1) * fig.points[in[0]].z));
+        auto & A = fig.points[in[0]];
+        auto & B = fig.points[out[0]];
+        auto & C = fig.points[out[1]];
 
-        fig.points.emplace_back(Vector3D::point((p2 * fig.points[out[1]].x) + (1 - p2) * fig.points[in[0]].x,
-                                                (p2 * fig.points[out[1]].y) + (1 - p2) * fig.points[in[0]].y,
-                                                (p2 * fig.points[out[1]].z) + (1 - p2) * fig.points[in[0]].z));
+        double p1 = (B.y * near + B.z * -top) / ((B.y - A.y) * near + (B.z - A.z) * -top);
+        double p2 = (C.y * near + C.z * -top) / ((C.y - A.y) * near + (C.z - A.z) * -top);
+
+        fig.points.emplace_back(Vector3D::point(p1 * A + (1-p1) * B));
+        fig.points.emplace_back(Vector3D::point(p2 * A + (1-p2) * C));
 
         fig.faces.emplace_back(Face{in[0], (int) (fig.points.size() - 1), (int) (fig.points.size() - 2)});
         fig.faces.erase(fig.faces.begin() + j);
         j--;
-      } else { // doe niks
-
+      } else { // niks doen
       }
     }
     fig.faces = triangulate(fig.faces);
 
 
-  Matrix bend;
-  bend(1, 1) = near / right;
-  bend(2, 2) = near / top;
-//    bend(3, 3) = -(far + near) / (far - near);
-//    bend(3, 4) = - 2 * far * near / (far - near);
-//    bend(4, 3) = -1;
-
-  for ( auto &p : fig.points){
-    p *= bend;
-  }
+//  Matrix bend;
+//  bend(1, 1) = near / right;
+//  bend(2, 2) = near / top;
+////    bend(3, 3) = -(far + near) / (far - near);
+////    bend(3, 4) = - 2 * far * near / (far - near);
+////    bend(4, 3) = -1;
+//
+//  for ( auto &p : fig.points){
+//    p *= bend;
+//  }
 
 
 

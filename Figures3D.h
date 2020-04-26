@@ -47,6 +47,8 @@ namespace figures_3d {
 
         void to_eye( const double &theta, const double &phi, const double &r);
 
+      void to_eye_clip(const double &theta, const double &phi, Vector3D &);
+
         lines_2d::Lines2D project_figure(double d = 1);
     };
 

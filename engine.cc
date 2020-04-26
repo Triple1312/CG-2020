@@ -119,14 +119,32 @@ img::EasyImage generate_image(const ini::Configuration &configuration) {
       figures_3d::Figures3D figs = figures_3d::Wireframe(configuration);
 
 
+
+      if (configuration["General"]["clipping"].as_bool_or_default(false)) {
+        double near = configuration["General"]["dNear"].as_double_or_die();
+        ini::DoubleTuple eye = configuration["General"]["eye"].as_double_tuple_or_die();
+        Vector3D eyev = Vector3D::point(eye[0], eye[1], eye[2]);
+        double r = std::pow(std::pow(eye[0], 2.0) + std::pow(eye[1], 2.0) + std::pow(eye[2], 2.0), 0.5);
+        for (auto &f : figs){
+          f.to_eye_clip(std::atan2(eye[1], eye[0]), std::acos(eye[2] / r),  eyev);
+          f = figures_3d::clipping(f, configuration);
+
+          for (auto &p : f.points){
+            p.x = p.x * near / -p.z;
+            p.y = p.y * near / -p.z;
+          }
+        }
+      }
+
       lines_2d::Lines2D lines;
       for (auto &l : figs) {
         for (auto n : l.project_figure()){
           lines.push_back( n );
         }
       }
+      if (lines.empty()) { std::cout << "geen figuren te tekenen" << std::endl;}
       std::tuple<double, double, double, double, double> d_dx_dy_image = lines_2d::d_dx_dy(lines, configuration["General"]["size"].as_int_or_die());
-      double d, dx, dy; int imagex, imagey;
+      double d, dx, dy;int imagex; int imagey;
       std::tie(d, dx, dy, imagex, imagey) = d_dx_dy_image;
       img::EasyImage image(imagex, imagey);
       zbuffer::ZBuffer buffer(imagex, imagey);
@@ -143,20 +161,7 @@ img::EasyImage generate_image(const ini::Configuration &configuration) {
           }
         }
         l.faces = newfaces;
-        if (configuration["General"]["clipping"].as_bool_or_die()) {
-          newfaces.clear();
-          l = figures_3d::clipping(l, configuration);
-          for (auto k = 0; k < l.faces.size(); k++) {
-            if (l.faces[k].size() > 3) {
-              for (auto j : figures_3d::triangulate(l.faces[k])) {
-                newfaces.push_back(j);
-              }
-            } else {
-              newfaces.emplace_back(l.faces[k]);
-            }
-          }
-          l.faces = newfaces;
-        }
+
         for (int f = 0; f < l.faces.size(); ++f) {
           figures_3d::draw_triangle(l.points[l.faces[f][0]],
                                     l.points[l.faces[f][1]],
