@@ -338,6 +338,39 @@ namespace {
       return Matrix(getMatrix_translate(-eye) * getMatrix_rotate_z(-(theta + M_PI / 2)) * getMatrix_rotate_x(- phi));
     }
 
+    ///engine crasht als nrIt == 0
+figures_3d::Figures3D menger_sponge(int nrIt, img::Color& color, figures_3d::Figure fig = cube()) {
+  figures_3d::Figures3D figs;
+  std::vector<double> ops;
+  ops.emplace_back( 2.0/3);
+  ops.emplace_back(-2.0/3);
+  ops.emplace_back(0);
+  nrIt -= 1;
+
+  for (auto &i : ops) {
+    for (auto &j : ops) {
+      for (auto &k : ops) {
+        if (i*j != 0|| j*k != 0 || i*k != 0){ //todo , dit laten werken
+          auto cube_n = fig;
+          cube_n.scale(1.0/3);
+          cube_n.translate(i, j, k);
+          cube_n.color = color;
+          figs.emplace_back(cube_n);
+        }
+      }
+    }
+  }
+  if (nrIt != 0) {
+    figures_3d::Figures3D temps;
+    for (auto &f: figs){
+      auto temps2 = menger_sponge(nrIt -1, color, f);
+      temps.insert(temps.end(), temps2.begin(), temps2.end());
+    }
+    figs = temps;
+  }
+  return figs;
+}
+
 
 }
 
@@ -519,7 +552,8 @@ figures_3d::Figures3D figures_3d::Wireframe(const ini::Configuration &configurat
       if (configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "FractalCube" ||
           configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "FractalDodecahedron" ||
           configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "FractalTetrahedron" ||
-          configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "FractalIcosahedron") {
+          configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "FractalIcosahedron" ||
+          configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "MengerSponge"){
         int nrIt = configuration["Figure" + std::to_string(i)]["nrIterations"].as_int_or_die();
         figures_3d::Figures3D temp_figs;
         if (configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "FractalCube") {
@@ -533,6 +567,11 @@ figures_3d::Figures3D figures_3d::Wireframe(const ini::Configuration &configurat
         }
         else if (configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "FractalDodecahedron"){
           temp_figs = fractal(nrIt,configuration["Figure"+ std::to_string(i)]["fractalScale"].as_double_or_die(), dodecahedron());
+        }
+        else if (configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "MengerSponge"){
+          auto color = configuration["Figure" + std::to_string(i)]["color"].as_double_tuple_or_die();
+          auto Color = img::Color(color[0]* 255, color[1] * 255, color[2] *255);
+          temp_figs = menger_sponge(nrIt ,Color);
         }
         for (auto k : temp_figs) {
           ini::DoubleTuple fig_color = configuration["Figure" + std::to_string(i)]["color"].as_double_tuple_or_die();
