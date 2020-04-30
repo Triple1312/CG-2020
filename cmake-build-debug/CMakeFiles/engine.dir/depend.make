@@ -3,6 +3,8 @@
 
 CMakeFiles/engine.dir/Figures3D.cc.o: ../Figures3D.cc
 CMakeFiles/engine.dir/Figures3D.cc.o: ../Figures3D.h
+CMakeFiles/engine.dir/Figures3D.cc.o: ../Light.h
+CMakeFiles/engine.dir/Figures3D.cc.o: ../Platonics.h
 CMakeFiles/engine.dir/Figures3D.cc.o: ../ZBuffer.h
 CMakeFiles/engine.dir/Figures3D.cc.o: ../easy_image.h
 CMakeFiles/engine.dir/Figures3D.cc.o: ../ini_configuration.h
@@ -10,6 +12,24 @@ CMakeFiles/engine.dir/Figures3D.cc.o: ../l_parser.h
 CMakeFiles/engine.dir/Figures3D.cc.o: ../l_system.h
 CMakeFiles/engine.dir/Figures3D.cc.o: ../lines.h
 CMakeFiles/engine.dir/Figures3D.cc.o: ../vector3d.h
+
+CMakeFiles/engine.dir/Light.cc.o: ../Light.cc
+CMakeFiles/engine.dir/Light.cc.o: ../Light.h
+CMakeFiles/engine.dir/Light.cc.o: ../easy_image.h
+CMakeFiles/engine.dir/Light.cc.o: ../ini_configuration.h
+CMakeFiles/engine.dir/Light.cc.o: ../vector3d.h
+
+CMakeFiles/engine.dir/Platonics.cc.o: ../Figures3D.h
+CMakeFiles/engine.dir/Platonics.cc.o: ../Light.h
+CMakeFiles/engine.dir/Platonics.cc.o: ../Platonics.cc
+CMakeFiles/engine.dir/Platonics.cc.o: ../Platonics.h
+CMakeFiles/engine.dir/Platonics.cc.o: ../ZBuffer.h
+CMakeFiles/engine.dir/Platonics.cc.o: ../easy_image.h
+CMakeFiles/engine.dir/Platonics.cc.o: ../ini_configuration.h
+CMakeFiles/engine.dir/Platonics.cc.o: ../l_parser.h
+CMakeFiles/engine.dir/Platonics.cc.o: ../l_system.h
+CMakeFiles/engine.dir/Platonics.cc.o: ../lines.h
+CMakeFiles/engine.dir/Platonics.cc.o: ../vector3d.h
 
 CMakeFiles/engine.dir/ZBuffer.cc.o: ../ZBuffer.cc
 CMakeFiles/engine.dir/ZBuffer.cc.o: ../ZBuffer.h
@@ -23,6 +43,7 @@ CMakeFiles/engine.dir/easy_image.cc.o: ../easy_image.cc
 CMakeFiles/engine.dir/easy_image.cc.o: ../easy_image.h
 
 CMakeFiles/engine.dir/engine.cc.o: ../Figures3D.h
+CMakeFiles/engine.dir/engine.cc.o: ../Light.h
 CMakeFiles/engine.dir/engine.cc.o: ../ZBuffer.h
 CMakeFiles/engine.dir/engine.cc.o: ../easy_image.h
 CMakeFiles/engine.dir/engine.cc.o: ../engine.cc
@@ -39,6 +60,7 @@ CMakeFiles/engine.dir/l_parser.cc.o: ../l_parser.cc
 CMakeFiles/engine.dir/l_parser.cc.o: ../l_parser.h
 
 CMakeFiles/engine.dir/l_system.cc.o: ../Figures3D.h
+CMakeFiles/engine.dir/l_system.cc.o: ../Light.h
 CMakeFiles/engine.dir/l_system.cc.o: ../ZBuffer.h
 CMakeFiles/engine.dir/l_system.cc.o: ../easy_image.h
 CMakeFiles/engine.dir/l_system.cc.o: ../ini_configuration.h

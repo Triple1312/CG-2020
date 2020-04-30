@@ -1,5 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/engine.dir/Figures3D.cc.o"
+  "CMakeFiles/engine.dir/Light.cc.o"
+  "CMakeFiles/engine.dir/Platonics.cc.o"
   "CMakeFiles/engine.dir/ZBuffer.cc.o"
   "CMakeFiles/engine.dir/easy_image.cc.o"
   "CMakeFiles/engine.dir/engine.cc.o"

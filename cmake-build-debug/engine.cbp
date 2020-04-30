@@ -130,6 +130,18 @@
 		<Unit filename="/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Figures3D.h">
 			<Option target="engine"/>
 		</Unit>
+		<Unit filename="/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Light.cc">
+			<Option target="engine"/>
+		</Unit>
+		<Unit filename="/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Light.h">
+			<Option target="engine"/>
+		</Unit>
+		<Unit filename="/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Platonics.cc">
+			<Option target="engine"/>
+		</Unit>
+		<Unit filename="/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Platonics.h">
+			<Option target="engine"/>
+		</Unit>
 		<Unit filename="/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/ZBuffer.cc">
 			<Option target="engine"/>
 		</Unit>

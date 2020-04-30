@@ -196,6 +196,60 @@ Figures3D.cc.s:
 	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/Figures3D.cc.s
 .PHONY : Figures3D.cc.s
 
+Light.o: Light.cc.o
+
+.PHONY : Light.o
+
+# target to build an object file
+Light.cc.o:
+	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/Light.cc.o
+.PHONY : Light.cc.o
+
+Light.i: Light.cc.i
+
+.PHONY : Light.i
+
+# target to preprocess a source file
+Light.cc.i:
+	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/Light.cc.i
+.PHONY : Light.cc.i
+
+Light.s: Light.cc.s
+
+.PHONY : Light.s
+
+# target to generate assembly for a file
+Light.cc.s:
+	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/Light.cc.s
+.PHONY : Light.cc.s
+
+Platonics.o: Platonics.cc.o
+
+.PHONY : Platonics.o
+
+# target to build an object file
+Platonics.cc.o:
+	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/Platonics.cc.o
+.PHONY : Platonics.cc.o
+
+Platonics.i: Platonics.cc.i
+
+.PHONY : Platonics.i
+
+# target to preprocess a source file
+Platonics.cc.i:
+	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/Platonics.cc.i
+.PHONY : Platonics.cc.i
+
+Platonics.s: Platonics.cc.s
+
+.PHONY : Platonics.s
+
+# target to generate assembly for a file
+Platonics.cc.s:
+	$(MAKE) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/Platonics.cc.s
+.PHONY : Platonics.cc.s
+
 ZBuffer.o: ZBuffer.cc.o
 
 .PHONY : ZBuffer.o
@@ -428,6 +482,12 @@ help:
 	@echo "... Figures3D.o"
 	@echo "... Figures3D.i"
 	@echo "... Figures3D.s"
+	@echo "... Light.o"
+	@echo "... Light.i"
+	@echo "... Light.s"
+	@echo "... Platonics.o"
+	@echo "... Platonics.i"
+	@echo "... Platonics.s"
 	@echo "... ZBuffer.o"
 	@echo "... ZBuffer.i"
 	@echo "... ZBuffer.s"

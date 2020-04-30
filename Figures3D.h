@@ -19,21 +19,27 @@
 #include "lines.h"
 #include "ZBuffer.h"
 #include "l_system.h"
+#include "Light.h"
+
 
 namespace figures_3d {
 
     typedef std::vector<int> Face;
 
-    struct Figure {
+    class Figure {
+     public:
 
         std::vector<Vector3D> points;
         std::vector<Face> faces;
-        img::Color color;
+        img::Color ambientReflection;
+        img::Color diffuseReflection;
+        img::Color specularReflection;
+        double reflectionCoefficient;
 
         Figure() = default;
 
         Figure(std::vector<Vector3D> points, std::vector<Face> faces, img::Color &color)
-                    : points(std::move(std::move(points))), faces(std::move(std::move(faces))), color(color) {}
+                    : points(std::move(std::move(points))), faces(std::move(std::move(faces))), ambientReflection(color) {}
 
         void scale(const double &scale);
 
@@ -47,13 +53,24 @@ namespace figures_3d {
 
         void to_eye( const double &theta, const double &phi, const double &r);
 
-      void to_eye_clip(const double &theta, const double &phi, Vector3D &);
+        void to_eye_clip(const double &theta, const double &phi, Vector3D &);
 
         lines_2d::Lines2D project_figure(double d = 1);
 
+        img::Color calcColor(Lights3D &);
+
+
     };
 
-    typedef std::vector<Figure> Figures3D;
+    //typedef std::vector<Figure> Figures3D;
+
+    struct Figures3D :  public std::vector<Figure> {
+
+      Figures3D(figures_3d::Figure fig);
+
+      Figures3D() = default;
+
+    };
 
     figures_3d::Figure clipping(Figure figs, const ini::Configuration &conf);
 
@@ -81,7 +98,18 @@ namespace figures_3d {
                        img::Color &color,
                        double d = 1);
 
-
+    void draw_triangle_light(const Vector3D &A,
+                             const Vector3D &B,
+                             const Vector3D &C,
+                             double d,
+                             double dx,
+                             double dy,
+                             img::EasyImage &image,
+                             zbuffer::ZBuffer &buffer,
+                             img::Color ambientReflection,
+                             img::Color diffuseReflection,
+                             img::Color specularReflection, double reflectionCoeff,
+                             Lights3D& lights);
 
 }
 

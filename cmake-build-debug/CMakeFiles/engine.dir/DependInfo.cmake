@@ -5,6 +5,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
   "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Figures3D.cc" "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/cmake-build-debug/CMakeFiles/engine.dir/Figures3D.cc.o"
+  "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Light.cc" "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/cmake-build-debug/CMakeFiles/engine.dir/Light.cc.o"
+  "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Platonics.cc" "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/cmake-build-debug/CMakeFiles/engine.dir/Platonics.cc.o"
   "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/ZBuffer.cc" "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/cmake-build-debug/CMakeFiles/engine.dir/ZBuffer.cc.o"
   "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/easy_image.cc" "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/cmake-build-debug/CMakeFiles/engine.dir/easy_image.cc.o"
   "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/engine.cc" "/mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/cmake-build-debug/CMakeFiles/engine.dir/engine.cc.o"

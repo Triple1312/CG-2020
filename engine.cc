@@ -113,12 +113,13 @@ img::EasyImage generate_image(const ini::Configuration &configuration) {
       return buffer.draw_lines(lines, size.first, size.second);
 
     }
-    else if (configuration["General"]["type"].as_string_or_die() == "ZBuffering"){
+
+    else if(configuration["General"]["type"].as_string_or_die() == "LightedZBuffering" ||
+            configuration["General"]["type"].as_string_or_die() == "ZBuffering") { // todo was hier bezig
       ini::DoubleTuple background = configuration["General"]["backgroundcolor"].as_double_tuple_or_die();
       img::Color bg(uint8_t (background[0]*255), uint8_t (background[1]*255), uint8_t (background[2]*255));
       figures_3d::Figures3D figs = figures_3d::Wireframe(configuration);
-
-
+      Lights3D lights = Lights3D(configuration);
 
       if (configuration["General"]["clipping"].as_bool_or_default(false)) {
         double near = configuration["General"]["dNear"].as_double_or_die();
@@ -162,16 +163,25 @@ img::EasyImage generate_image(const ini::Configuration &configuration) {
         }
         l.faces = newfaces;
 
+        /// if no lights were given and a figure has a color than we will place it as the ambient reflection color and
+        /// a white ambient light will be made here.
+        if (lights.empty()){lights.emplace_back(Light());}
+
         for (int f = 0; f < l.faces.size(); ++f) {
-          figures_3d::draw_triangle(l.points[l.faces[f][0]],
-                                    l.points[l.faces[f][1]],
-                                    l.points[l.faces[f][2]],
-                                    dx,
-                                    dy,
-                                    image,
-                                    buffer,
-                                    l.color,
-                                    d);
+          figures_3d::draw_triangle_light(l.points[l.faces[f][0]],
+                                          l.points[l.faces[f][1]],
+                                          l.points[l.faces[f][2]],
+                                          dx,
+                                          dy,
+                                          d,
+                                          image,
+                                          buffer,
+                                          l.ambientReflection,
+                                          l.diffuseReflection,
+                                          l.specularReflection,
+                                          l.reflectionCoefficient,
+                                          lights
+                                           );
         }
       }
       return image;

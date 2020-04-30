@@ -27,7 +27,7 @@ set(engine_sources
 ############################################################
 
 set(student_files
-		lines.cc lines.h Figures3D.h Figures3D.cc l_system.cc l_system.h   ZBuffer.cc ZBuffer.h)
+		lines.cc lines.h Figures3D.h Figures3D.cc l_system.cc l_system.h   ZBuffer.cc ZBuffer.h Platonics.cc Platonics.h Light.cc Light.h)
 
 ############################################################
 # Create an executable

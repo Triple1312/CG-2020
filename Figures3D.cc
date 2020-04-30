@@ -4,6 +4,8 @@
 
 #include "Figures3D.h"
 
+#include "Platonics.h"
+
 namespace {
     inline void rot_U_axis(const double angle, std::tuple<double, double, double> &H_axis, std::tuple<double, double, double> &L_axis) {
       std::tuple<double, double, double> H_new(std::get<0>(H_axis) * cos(angle) + std::get<0>(L_axis) * sin(angle),
@@ -50,222 +52,6 @@ namespace {
             figure.faces.push_back(line_n);
         }
         return figure;
-    }
-
-    inline figures_3d::Figure cube(){
-        figures_3d::Figure fig;
-        fig.points.push_back(Vector3D::point(1, -1, -1));
-        fig.points.push_back(Vector3D::point(-1, 1, -1));
-        fig.points.push_back(Vector3D::point(1, 1, 1));
-        fig.points.push_back(Vector3D::point(-1, -1, 1));
-        fig.points.push_back(Vector3D::point(1, 1, -1));
-        fig.points.push_back(Vector3D::point(-1, -1, -1));
-        fig.points.push_back(Vector3D::point(1, -1, 1));
-        fig.points.push_back(Vector3D::point(-1, 1, 1));
-        fig.faces.push_back(std::vector<int>{0, 5, 1, 4});
-        fig.faces.push_back(std::vector<int>{6, 3, 7, 2});
-        fig.faces.push_back(std::vector<int>{1, 5, 3, 7});
-        fig.faces.push_back(std::vector<int>{2, 6, 0, 4});
-        fig.faces.push_back(std::vector<int>{0, 5, 3, 6});
-        fig.faces.push_back(std::vector<int>{2, 7, 1, 4});
-        return fig;
-    }
-
-    inline figures_3d::Figure cylinder(const ini::Configuration &configuration, unsigned int i) {
-        figures_3d::Figure fig;
-        double height = configuration["Figure" + std::to_string(i)]["height"].as_double_or_die();
-        int n = configuration["Figure" + std::to_string(i)]["n"].as_int_or_die();
-        std::vector<int> firts_face = {0, 1};
-
-        for (int i = 0; i < n; i++) {
-          fig.points.emplace_back(Vector3D::point(std::cos(2 * M_PI * i  / n),
-                                                  std::sin(2 * M_PI * i  / n), 0));
-        }
-        for (int i = 0; i < n; i++) {
-          fig.points.emplace_back(Vector3D::point(std::cos(2 * M_PI * i  / n),
-                                                  std::sin(2 * M_PI * i  / n), height));
-        }
-        for (int j = 0; j < n-1; j++) {
-          fig.faces.push_back(std::vector<int>{j, j+1, j+n+1, j+n});
-        }
-        fig.faces.push_back(std::vector<int>{0, n-1, 2*n -1, n});
-        std::vector<int> onder;
-        std::vector<int> boven;
-        for (int k = 0; k < n; k++) {
-          onder.push_back(k);
-          boven.push_back(n+k);
-        }
-        fig.faces.push_back(onder);
-        fig.faces.push_back(boven);
-        return fig;
-    }
-
-    inline figures_3d::Figure cone(const ini::Configuration &configuration, unsigned int i) {
-        figures_3d::Figure fig;
-        double height = configuration["Figure" + std::to_string(i)]["height"].as_double_or_die();
-        int points_size = configuration["Figure" + std::to_string(i)]["n"].as_int_or_die();
-        auto top = Vector3D::point(0, 0, height);
-        fig.points.push_back(top);
-        auto start_point = Vector3D::point(1, 0, 0); fig.points.push_back(start_point);
-
-        for (auto j = 1; j <= points_size; j++){
-            auto point = Vector3D::point(std::cos(2 * M_PI * j  / points_size), std::sin(2 * M_PI * j  / points_size), 0);
-            fig.points.push_back(point);
-            std::vector<int> face;
-             face.push_back(j); face.push_back(j - 1); face.push_back(0);
-            fig.faces.push_back(face);
-        }
-        std::vector<int> last_face = {0, 1, int(fig.points.size()-2)};
-        fig.faces.push_back(last_face);
-        return fig;
-    }
-
-    inline figures_3d::Figure torus(const ini::Configuration &configuration, unsigned int i){
-        figures_3d::Figure fig;
-        auto R = configuration["Figure" + std::to_string(i)]["R"].as_double_or_die();
-        auto r = configuration["Figure" + std::to_string(i)]["r"].as_double_or_die();
-        auto n = configuration["Figure" + std::to_string(i)]["n"].as_int_or_die();
-        auto m = configuration["Figure" + std::to_string(i)]["m"].as_int_or_die();
-
-        for (auto i = 0; i < n; i++){
-            for (auto j = 0; j < m; j++){
-                double u = 2 * i * M_PI / n;
-                double v = 2 * j * M_PI / m;
-                fig.points.push_back(Vector3D::point(((R + r * std::cos(v)) * std::cos(u)),
-                                                     ((R + r * std::cos(v)) * std::sin(u)),
-                                                     r * std::sin(v)));
-            }
-        }
-        for (auto i = 0; i < n; i++){
-          for (auto j = 0; j < m; j++){
-            fig.faces.push_back(std::vector<int>{i*m+j, ((i+1)%n)*m+j,((i+1)%n)*m+((j+1)%m), i*m+((j+1)%m)});
-          }
-        }
-        return fig;
-    }
-
-    inline figures_3d::Figure tetrahedron(){
-        figures_3d::Figure fig;
-        fig.points.push_back(Vector3D::point(1, -1, -1));
-        fig.points.push_back(Vector3D::point(-1, 1, -1));
-        fig.points.push_back(Vector3D::point(1, 1, 1));
-        fig.points.push_back(Vector3D::point(-1, -1, 1));
-        fig.faces.push_back(std::vector<int>{0, 1, 2});
-        fig.faces.push_back(std::vector<int>{0, 2, 3});
-        fig.faces.push_back(std::vector<int>{0, 1, 3});
-        fig.faces.push_back(std::vector<int>{1, 2, 3});
-        return fig;
-    }
-
-    inline std::vector<std::vector<int>> ico_faces(){
-        std::vector<std::vector<int>> faces;
-        faces.push_back(std::vector<int>{0, 1, 2}); faces.push_back(std::vector<int>{0, 2, 3});
-        faces.push_back(std::vector<int>{0, 3, 4}); faces.push_back(std::vector<int>{0, 4, 5});
-        faces.push_back(std::vector<int>{0, 5, 1}); faces.push_back(std::vector<int>{1, 6, 2});
-        faces.push_back(std::vector<int>{1, 10, 6}); faces.push_back(std::vector<int>{2, 6, 7});
-        faces.push_back(std::vector<int>{2, 7, 3}); faces.push_back(std::vector<int>{3, 7, 8});
-        faces.push_back(std::vector<int>{3, 8, 4}); faces.push_back(std::vector<int>{4, 8, 9});
-        faces.push_back(std::vector<int>{4, 9, 5}); faces.push_back(std::vector<int>{5, 9, 10});
-        faces.push_back(std::vector<int>{5, 10, 1}); faces.push_back(std::vector<int>{11, 6, 10});
-        faces.push_back(std::vector<int>{11, 7, 6}); faces.push_back(std::vector<int>{11, 8, 7});
-        faces.push_back(std::vector<int>{11, 9, 8}); faces.push_back(std::vector<int>{11, 10, 9});
-        return faces;
-    }
-
-    inline figures_3d::Figure icosahedron() {
-        figures_3d::Figure fig;
-        fig.points.push_back(Vector3D::point(0, 0, sqrt(5) / 2));
-        for (auto i = 2; i <= 6; i++) {
-            fig.points.push_back(Vector3D::point(std::cos((i-2) * 2 * M_PI / 5),
-                                                 std::sin((i-2) * 2 * M_PI / 5),
-                                                 0.5));
-        }
-        for (int j = 7; j <= 11 ; j++) {
-            fig.points.push_back(Vector3D::point(std::cos( M_PI / 5 + (j-7) * 2 * M_PI / 5),
-                                                 std::sin( M_PI / 5 + (j-7) * 2 * M_PI / 5),
-                                                 -0.5));
-        }
-        fig.points.push_back(Vector3D::point(0, 0, - sqrt(5) / 2));
-
-        fig.faces = ico_faces();
-        return fig;
-    }
-
-    inline figures_3d::Figure octahedron() {
-        figures_3d::Figure fig;
-        fig.points.push_back(Vector3D::point(1, 0, 0 ));
-        fig.points.push_back(Vector3D::point(0, 1, 0 ));
-        fig.points.push_back(Vector3D::point(-1, 0, 0 ));
-        fig.points.push_back(Vector3D::point(0, -1, 0 ));
-        fig.points.push_back(Vector3D::point(0, 0, -1 ));
-        fig.points.push_back(Vector3D::point(0, 0, 1 ));
-
-        fig.faces.push_back(std::vector<int>{1, 2, 6});
-        fig.faces.push_back(std::vector<int>{2, 3, 6});
-        fig.faces.push_back(std::vector<int>{3, 4, 6});
-        fig.faces.push_back(std::vector<int>{4, 1, 6});
-        fig.faces.push_back(std::vector<int>{2, 1, 5});
-        fig.faces.push_back(std::vector<int>{3, 2, 5});
-        fig.faces.push_back(std::vector<int>{4, 3, 5});
-        fig.faces.push_back(std::vector<int>{1, 4, 5});
-
-        return fig;
-    }
-
-    inline figures_3d::Figure dodecahedron(){
-        figures_3d::Figure ico = icosahedron();
-        figures_3d::Figure fig;
-
-        for (auto i : ico.faces){
-            auto &points = ico.points;
-            fig.points.push_back(Vector3D::point(( points[i[0]].x + points[i[1]].x + points[i[2]].x) / 3,
-                                                 ( points[i[0]].y + points[i[1]].y + points[i[2]].y) / 3,
-                                                 ( points[i[0]].z + points[i[1]].z + points[i[2]].z) / 3) );
-        }
-
-        for (int j = 0; j < fig.points.size(); j++) {
-            for (int k = j+1; k < fig.points.size(); k++) {
-                if ( sqrt(pow(fig.points[j].x + fig.points[k].x, 2) +
-                          pow(fig.points[j].y + fig.points[k].y, 2) +
-                          pow(fig.points[j].z + fig.points[k].z, 2)) > 1.5){
-                    fig.faces.push_back(std::vector<int>{j, k}); // todo fixen
-                }
-            }
-        }
-
-        return fig;
-    }
-
-    inline figures_3d::Figure sphere(int n){
-        figures_3d::Figure fig = icosahedron();
-
-        for (auto j = 0; j < n; j++) {
-            auto faces_b_s = fig.faces.size(); // begin size of faces
-            for (int i = 0; i < faces_b_s; i++) {
-                fig.points.push_back((fig.points[fig.faces[0][0]] + fig.points[fig.faces[0][1]]) / 2);
-                fig.points.push_back((fig.points[fig.faces[0][0]] + fig.points[fig.faces[0][2]]) / 2);
-                fig.points.push_back((fig.points[fig.faces[0][1]] + fig.points[fig.faces[0][2]]) / 2);
-
-                fig.faces.push_back(
-                        std::vector<int>{fig.faces[0][0], int(fig.points.size()) - 3, int(fig.points.size()) - 2});
-                fig.faces.push_back(
-                        std::vector<int>{fig.faces[0][1], int(fig.points.size()) - 3, int(fig.points.size()) - 1});
-                fig.faces.push_back(
-                        std::vector<int>{fig.faces[0][2], int(fig.points.size()) - 2, int(fig.points.size()) - 1});
-                fig.faces.push_back(std::vector<int>{int(fig.points.size()) - 1, int(fig.points.size()) - 3,
-                                                     int(fig.points.size()) - 2});
-                fig.faces.erase(fig.faces.begin());
-            }
-
-        }
-
-        for (int k = 0; k < fig.points.size(); k++) {
-            double r = sqrt(pow(fig.points[k].x, 2) +
-                            pow(fig.points[k].y, 2) +
-                            pow(fig.points[k].z, 2));
-            fig.points[k] = fig.points[k] / r;
-        }
-        return fig;
     }
 
     inline Matrix getMatrix_rotate_x(const double &angle){
@@ -339,7 +125,7 @@ namespace {
     }
 
     ///engine crasht als nrIt == 0
-figures_3d::Figures3D menger_sponge(int nrIt, img::Color& color, figures_3d::Figure fig = cube()) {
+figures_3d::Figures3D menger_sponge(int nrIt, figures_3d::Figure fig = Cube() ) {
   figures_3d::Figures3D figs;
   std::vector<double> ops;
   ops.emplace_back( 2.0/3);
@@ -350,11 +136,11 @@ figures_3d::Figures3D menger_sponge(int nrIt, img::Color& color, figures_3d::Fig
   for (auto &i : ops) {
     for (auto &j : ops) {
       for (auto &k : ops) {
-        if (i*j != 0|| j*k != 0 || i*k != 0){ //todo , dit laten werken
+        if (i*j != 0|| j*k != 0 || i*k != 0){
           auto cube_n = fig;
           cube_n.scale(1.0/3);
           cube_n.translate(i, j, k);
-          cube_n.color = color;
+          //cube_n.ambientReflection = color; // todo check ook nu werkt
           figs.emplace_back(cube_n);
         }
       }
@@ -363,7 +149,7 @@ figures_3d::Figures3D menger_sponge(int nrIt, img::Color& color, figures_3d::Fig
   if (nrIt != 0) {
     figures_3d::Figures3D temps;
     for (auto &f: figs){
-      auto temps2 = menger_sponge(nrIt -1, color, f);
+      auto temps2 = menger_sponge(nrIt -1, f);
       temps.insert(temps.end(), temps2.begin(), temps2.end());
     }
     figs = temps;
@@ -371,10 +157,9 @@ figures_3d::Figures3D menger_sponge(int nrIt, img::Color& color, figures_3d::Fig
   return figs;
 }
 
+} // namespace
 
-}
-
-figures_3d::Figures3D figures_3d::fractal(int nrIt, const double& scale, Figure fig = cube()) {
+figures_3d::Figures3D figures_3d::fractal(int nrIt, const double& scale, Figure fig = Cube()) {
 
   figures_3d::Figures3D temps;
   Matrix scaler = getMatrix_scale(1 / scale);
@@ -515,7 +300,7 @@ lines_2d::Lines2D figures_3d::Figure::project_figure(double d) {
             lines.push_back(lines_2d::Line2D(
                     lines_2d::Point2D(- point1.x * d / point1.z , - point1.y * d / point1.z),
                     lines_2d::Point2D(- point2.x * d / point2.z , - point2.y * d / point2.z),
-                    this->color, point1.z, point2.z ));
+                    this->ambientReflection, point1.z, point2.z ));
 
         }
         Vector3D &point1 = this->points[this->faces[k][0]];
@@ -523,7 +308,7 @@ lines_2d::Lines2D figures_3d::Figure::project_figure(double d) {
         lines.push_back(lines_2d::Line2D(
             lines_2d::Point2D(- point1.x * d / point1.z , - point1.y * d / point1.z),
             lines_2d::Point2D(- point2.x * d / point2.z , - point2.y * d / point2.z),
-            this->color, point1.z, point2.z ));
+            this->ambientReflection, point1.z, point2.z ));
     }
     return lines;
 }
@@ -538,6 +323,17 @@ void figures_3d::Figure::to_eye_clip(const double &theta, const double &phi, Vec
   for (auto &i :this->points) {
     i *= eye_clip_matrix(theta, phi, eye );
   }
+}
+
+img::Color figures_3d::Figure::calcColor(Lights3D &lights) {
+  img::Color color;
+  for(auto &i : lights){
+    color.red = color.red + ambientReflection.red * i.ambientLight.red;
+    color.blue = color.blue + ambientReflection.blue * i.ambientLight.blue;
+    color.green = color.green + ambientReflection.green * i.ambientLight.green;
+  }
+
+  return color;
 }
 
 
@@ -557,25 +353,28 @@ figures_3d::Figures3D figures_3d::Wireframe(const ini::Configuration &configurat
         int nrIt = configuration["Figure" + std::to_string(i)]["nrIterations"].as_int_or_die();
         figures_3d::Figures3D temp_figs;
         if (configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "FractalCube") {
-          temp_figs = fractal(nrIt,configuration["Figure"+ std::to_string(i)]["fractalScale"].as_double_or_die(), cube());
+          temp_figs = fractal(nrIt,configuration["Figure"+ std::to_string(i)]["fractalScale"].as_double_or_die(), Cube());
         }
         else if (configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() =="FractalTetrahedron"){
-          temp_figs = fractal(nrIt,configuration["Figure"+ std::to_string(i)]["fractalScale"].as_double_or_die(), tetrahedron());
+          temp_figs = fractal(nrIt,configuration["Figure"+ std::to_string(i)]["fractalScale"].as_double_or_die(), Tetrahedron());
         }
         else if (configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "FractalIcosahedron"){
-          temp_figs = fractal(nrIt,configuration["Figure"+ std::to_string(i)]["fractalScale"].as_double_or_die(), icosahedron());
+          temp_figs = fractal(nrIt,configuration["Figure"+ std::to_string(i)]["fractalScale"].as_double_or_die(), Icosahedron());
         }
         else if (configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "FractalDodecahedron"){
-          temp_figs = fractal(nrIt,configuration["Figure"+ std::to_string(i)]["fractalScale"].as_double_or_die(), dodecahedron());
+          temp_figs = fractal(nrIt,configuration["Figure"+ std::to_string(i)]["fractalScale"].as_double_or_die(), Dodecahedron());
         }
         else if (configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "MengerSponge"){
           auto color = configuration["Figure" + std::to_string(i)]["color"].as_double_tuple_or_die();
           auto Color = img::Color(color[0]* 255, color[1] * 255, color[2] *255);
-          temp_figs = menger_sponge(nrIt ,Color);
+          auto sponge_fig = Cube(); sponge_fig.ambientReflection = Color;
+          temp_figs = menger_sponge(nrIt ,sponge_fig);
         }
         for (auto k : temp_figs) {
-          ini::DoubleTuple fig_color = configuration["Figure" + std::to_string(i)]["color"].as_double_tuple_or_die();
-          k.color = img::Color(fig_color[0] * 255, fig_color[1] * 255, fig_color[2] * 255);
+          ini::DoubleTuple am_refl = configuration["Figure" + std::to_string(i)]["ambientReflection"].as_double_tuple_or_default(ini::DoubleTuple(3, 0));
+          k.ambientReflection = img::Color(am_refl[0] * 255, am_refl[1] *255, am_refl[2]*255);
+          ini::DoubleTuple fig_color = configuration["Figure" + std::to_string(i)]["color"].as_double_tuple_or_default(ini::DoubleTuple(3, 0));
+          k.ambientReflection = img::Color(k.ambientReflection.red +fig_color[0] * 255, k.ambientReflection.green + fig_color[1] * 255, k.ambientReflection.blue + fig_color[2] * 255);
           double r = std::pow(std::pow(eye[0], 2.0) + std::pow(eye[1], 2.0) + std::pow(eye[2], 2.0), 0.5);
           ini::DoubleTuple center = configuration["Figure" + std::to_string(i)]["center"].as_double_tuple_or_die();
 
@@ -599,31 +398,31 @@ figures_3d::Figures3D figures_3d::Wireframe(const ini::Configuration &configurat
           figure = line_drawing(configuration, i);  // i is the number of the figure
         }
         else if (configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "Cube") {
-          figure = cube();
+          figure = Cube();
         }
         else if (configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "Cone") {
-          figure = cone(configuration, i);
+          figure = Cone(configuration, i);
         }
         else if (configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "Cylinder") {
-          figure = cylinder(configuration, i);
+          figure = Cylinder(configuration, i);
         }
         else if (configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "Torus") {
-          figure = torus(configuration, i);
+          figure = Torus(configuration, i);
         }
         else if (configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "Tetrahedron") {
-          figure = tetrahedron();
+          figure = Tetrahedron();
         }
         else if (configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "Icosahedron") {
-          figure = icosahedron();
+          figure = Icosahedron();
         }
         else if (configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "Octahedron") {
-          figure = octahedron();
+          figure = Octahedron();
         }
         else if (configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "Dodecahedron") {
-          figure = dodecahedron();
+          figure = Dodecahedron();
         }
         else if (configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "Sphere") {
-          figure = sphere(configuration["Figure" + std::to_string(i)]["n"].as_int_or_die());
+          figure = Sphere(configuration["Figure" + std::to_string(i)]["n"].as_int_or_die());
         }
 //        else if (configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "FractalCube") {
 //          figs = fractal_cube(configuration["Figure" + std::to_string(i)]["nrIterations"].as_int_or_die(),
@@ -634,15 +433,17 @@ figures_3d::Figures3D figures_3d::Wireframe(const ini::Configuration &configurat
         else if (configuration["Figure" + std::to_string(i)]["type"].as_string_or_die() == "3DLSystem") {
           std::ifstream file(configuration["Figure" + std::to_string(i)]["inputfile"].as_string_or_die());
           LParser::LSystem3D l_sys(file);
-          ini::DoubleTuple lineColor = configuration["Figure" + std::to_string(i)]["color"].as_double_tuple_or_die();
+          ini::DoubleTuple lineColor = configuration["Figure" + std::to_string(i)]["color"].as_double_tuple_or_default(ini::DoubleTuple(3, 0));
           img::Color line_c(lineColor[0]*255, lineColor[1]*255, lineColor[2]*255);
           figure = figures_3d::calc_fig(l_sys);
           //figure.color = line_c;
 
         }
 
-        ini::DoubleTuple fig_color = configuration["Figure" + std::to_string(i)]["color"].as_double_tuple_or_die();
-        figure.color = img::Color(fig_color[0] * 255, fig_color[1] * 255, fig_color[2] * 255);
+        ini::DoubleTuple fig_color = configuration["Figure" + std::to_string(i)]["color"].as_double_tuple_or_default(ini::DoubleTuple(3, 0));
+        ini::DoubleTuple am_refl = configuration["Figure" + std::to_string(i)]["ambientReflection"].as_double_tuple_or_default(ini::DoubleTuple(3, 0));
+        figure.ambientReflection = img::Color(am_refl[0]*255, am_refl[1]*255, am_refl[2]*255);
+        figure.ambientReflection = img::Color(figure.ambientReflection.red + fig_color[0] * 255, figure.ambientReflection.green +fig_color[1] * 255, figure.ambientReflection.blue +fig_color[2] * 255);
         double r = std::pow(std::pow(eye[0], 2.0) + std::pow(eye[1], 2.0) + std::pow(eye[2], 2.0), 0.5);
         ini::DoubleTuple center = configuration["Figure" + std::to_string(i)]["center"].as_double_tuple_or_die();
 
@@ -734,6 +535,74 @@ void figures_3d::draw_triangle(const Vector3D &A,
     }
   }
 }
+
+void figures_3d::draw_triangle_light(const Vector3D &A,
+                                     const Vector3D &B,
+                                     const Vector3D &C,
+                                     double dx,
+                                     double dy,
+                                     double d,
+                                     img::EasyImage &image,
+                                     zbuffer::ZBuffer &buffer,
+                                     img::Color ambientReflection,
+                                     img::Color diffuseReflection,
+                                     img::Color specularReflection, double reflectionCoeff,
+                                     Lights3D& lights) {
+
+  lines_2d::Point2D pa(d * A.x / (- A.z) + dx, d * A.y / (- A.z) + dy);
+  lines_2d::Point2D pb(d * B.x / (- B.z) + dx, d * B.y / (- B.z) + dy);
+  lines_2d::Point2D pc(d * C.x / (- C.z) + dx, d * C.y / (- C.z) + dy);
+  std::vector<double> y; y.push_back(pa.y);
+  y.push_back(pb.y); y.push_back(pc.y);
+
+  for (int yi = tools::d2i(min(y)+0.5); yi <= tools::d2i(max(y) -0.5); yi++) {
+    std::vector<double> xl = {std::numeric_limits<double>::infinity(),
+                              std::numeric_limits<double>::infinity(),
+                              std::numeric_limits<double>::infinity()};
+    std::vector<double> xr = { - std::numeric_limits<double>::infinity(),
+                               - std::numeric_limits<double>::infinity(),
+                               - std::numeric_limits<double>::infinity()};
+    if ( (yi - pb.y)*(yi - pa.y) <= 0) {
+      xl[0] = xr[0] = pa.x + (pb.x - pa.x) * (yi - pa.y) / (pb.y - pa.y);
+    }
+    if ( (yi - pc.y)*(yi - pa.y) <= 0) {
+      xl[1] = xr[1] = pa.x + (pc.x - pa.x) * (yi - pa.y) / (pc.y - pa.y);
+    }
+    if ( (yi - pb.y)*(yi - pc.y) <= 0) {
+      xl[2] = xr[2] = pc.x + (pb.x - pc.x) * (yi - pc.y) / (pb.y - pc.y);
+    }
+    int xl_ = tools::d2i(min(xl) +0.5); // x left
+    int xr_ = tools::d2i(max(xr) -0.5); // x right
+    Vector3D u = B - A;
+    Vector3D v = C - A;
+    Vector3D w = Vector3D::cross(u, v);
+    Vector3D n = Vector3D::normalise(w);
+
+    double k = w.x * A.x + w.y * A.y + w.z * A.z;
+    double dzdx = - w.x /d /k;
+    double dzdy = - w.y /d /k;
+    double xg = (pa.x + pb.x + pc.x) /3;
+    double yg = (pa.y + pb.y + pc.y) /3;
+    double ozg = 1 / (3 * A.z) + 1/ (3 * B.z) + 1/ (3 * C.z); // 1/Zg
+    for (int xi = xl_; xi <= xr_; xi++) {
+      double oz = 1.0001 * ozg + (xi - xg) * dzdx + (yi - yg) * dzdy;
+      if (buffer(xi, yi) > oz){
+        img::Color color;
+        for ( auto &i : lights) {
+          color.red = color.red + ambientReflection.red * i.ambientLight.red / 255;
+          color.blue = color.blue + ambientReflection.blue * i.ambientLight.blue /255;
+          color.green = color.green + ambientReflection.green * i.ambientLight.green /255;
+
+        }
+        image(xi, yi) = color;
+        buffer(xi, yi) = oz;
+      }
+    }
+  }
+  
+
+}
+
 
 double figures_3d::min(std::vector<double> values) {
   double min = values[0];
@@ -872,20 +741,6 @@ figures_3d::Figure figures_3d::clipping(Figure fig, const ini::Configuration &co
       }
     }
     fig.faces = triangulate(fig.faces);
-
-//    Matrix bend;
-//    bend(1, 1) = near / right;
-//    bend(2, 2) = near / top;
-////    bend(3, 3) = -(far + near) / (far - near);
-////    bend(3, 4) = - 2 * far * near / (far - near);
-////    bend(4, 3) = -1;
-//
-//    for ( auto &p : fig.points){
-//      p *= bend;
-//    }
-
-
-
 
     //todo right clipping
     int faces_size_now = fig.faces.size();
@@ -1098,81 +953,9 @@ figures_3d::Figure figures_3d::clipping(Figure fig, const ini::Configuration &co
     }
     fig.faces = triangulate(fig.faces);
 
-
-//  Matrix bend;
-//  bend(1, 1) = near / right;
-//  bend(2, 2) = near / top;
-////    bend(3, 3) = -(far + near) / (far - near);
-////    bend(3, 4) = - 2 * far * near / (far - near);
-////    bend(4, 3) = -1;
-//
-//  for ( auto &p : fig.points){
-//    p *= bend;
-//  }
-
-
-
-//    for (auto j = 0; j < fig.faces.size(); j++) {
-//      std::vector<int> in;
-//      std::vector<int> out;
-//      //
-//      for (auto &k : fig.faces[j]) {
-//        if (fig.points[k].x > -right) {
-//          in.emplace_back(k);
-//        } else {
-//          out.emplace_back(k);
-//        }
-//      }
-//      //
-//      if (in.size() == 3) {
-//        // do nothing
-//      } else if (in.size() == 2) {
-//        double p1 = (fig.points[in[0]].x * near + fig.points[in[0]].z * -right)/
-//            ((fig.points[in[0]].x - fig.points[out[0]].x) * near + (fig.points[in[0]].z - fig.points[out[0]].z) * -right);
-//        double p2 = (fig.points[in[1]].x * near + fig.points[in[1]].z * -right)/
-//            ((fig.points[in[1]].x - fig.points[out[0]].x) * near + (fig.points[in[1]].z - fig.points[out[1]].z) * -right);
-//
-//        fig.points.emplace_back(Vector3D::point((p1 * fig.points[in[0]].x) + (1 - p1) * fig.points[out[0]].x,
-//                                                (p1 * fig.points[in[0]].y) + (1 - p1) * fig.points[out[0]].y,
-//                                                (p1 * fig.points[in[0]].z) + (1 - p1) * fig.points[out[0]].z));
-//
-//        fig.points.emplace_back(Vector3D::point((p2 * fig.points[in[1]].x) + (1 - p2) * fig.points[out[0]].x,
-//                                                (p2 * fig.points[in[1]].y) + (1 - p2) * fig.points[out[0]].y,
-//                                                (p2 * fig.points[in[1]].z) + (1 - p2) * fig.points[out[0]].z));
-//
-//        fig.faces.emplace_back(Face{in[0], (int) (fig.points.size() - 1), (int) (fig.points.size() - 2), in[1]});
-//        fig.faces.erase(fig.faces.begin() + j);
-//        j--;
-//
-//      } else if (in.size() == 1) {
-//        double p1 = (fig.points[out[0]].x * near + fig.points[out[0]].z * -right)/
-//            ((fig.points[out[0]].x - fig.points[in[0]].x) * near + (fig.points[out[0]].z - fig.points[in[0]].z) * -right);
-//        double p2 = (fig.points[out[1]].x * near + fig.points[out[1]].z * -right)/
-//            ((fig.points[out[1]].x - fig.points[in[0]].x) * near + (fig.points[out[1]].z - fig.points[in[1]].z) * -right);
-//
-//        fig.points.emplace_back(Vector3D::point((p1 * fig.points[out[0]].x) + (1 - p1) * fig.points[in[0]].x,
-//                                                (p1 * fig.points[out[0]].y) + (1 - p1) * fig.points[in[0]].y,
-//                                                (p1 * fig.points[out[0]].z) + (1 - p1) * fig.points[in[0]].z));
-//
-//        fig.points.emplace_back(Vector3D::point((p2 * fig.points[out[1]].x) + (1 - p2) * fig.points[in[0]].x,
-//                                                (p2 * fig.points[out[1]].y) + (1 - p2) * fig.points[in[0]].y,
-//                                                (p2 * fig.points[out[1]].z) + (1 - p2) * fig.points[in[0]].z));
-//
-//        fig.faces.emplace_back(Face{in[0], (int) (fig.points.size() - 1), (int) (fig.points.size() - 2)});
-//        fig.faces.erase(fig.faces.begin() + j);
-//        j--;
-//      } else { // gewoon face weggooien
-//        fig.faces.erase(fig.faces.begin() + j);
-//        j--;
-//      }
-//    }
-
-
-  // x scaling
-//  for (auto &p : fig.points) {
-//    p.x = -p.x *near / p.z;
-//  }
-
-
   return fig;
+}
+
+figures_3d::Figures3D::Figures3D(figures_3d::Figure fig) {
+  this->push_back(fig);
 }

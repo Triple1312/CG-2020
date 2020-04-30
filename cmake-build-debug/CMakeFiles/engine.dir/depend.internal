@@ -4,6 +4,26 @@
 CMakeFiles/engine.dir/Figures3D.cc.o
  /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Figures3D.cc
  /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Figures3D.h
+ /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Light.h
+ /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Platonics.h
+ /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/ZBuffer.h
+ /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/easy_image.h
+ /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/ini_configuration.h
+ /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/l_parser.h
+ /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/l_system.h
+ /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/lines.h
+ /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/vector3d.h
+CMakeFiles/engine.dir/Light.cc.o
+ /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Light.cc
+ /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Light.h
+ /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/easy_image.h
+ /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/ini_configuration.h
+ /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/vector3d.h
+CMakeFiles/engine.dir/Platonics.cc.o
+ /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Figures3D.h
+ /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Light.h
+ /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Platonics.cc
+ /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Platonics.h
  /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/ZBuffer.h
  /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/easy_image.h
  /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/ini_configuration.h
@@ -24,6 +44,7 @@ CMakeFiles/engine.dir/easy_image.cc.o
  /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/easy_image.h
 CMakeFiles/engine.dir/engine.cc.o
  /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Figures3D.h
+ /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Light.h
  /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/ZBuffer.h
  /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/easy_image.h
  /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/engine.cc
@@ -40,6 +61,7 @@ CMakeFiles/engine.dir/l_parser.cc.o
  /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/l_parser.h
 CMakeFiles/engine.dir/l_system.cc.o
  /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Figures3D.h
+ /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/Light.h
  /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/ZBuffer.h
  /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/easy_image.h
  /mnt/c/Users/Phili/Documents/Universiteit/2019-2020/2de trimester/CG-2020/ini_configuration.h
